@@ -1,0 +1,22 @@
+{
+  "name": "mjolnir",
+  "version": "0.1.0",
+  "scripts": {
+    "format": "prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhzrerfani/mjolnir.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mhzrerfani/mjolnir/issues"
+  },
+  "private": true,
+  "devDependencies": {
+    "prettier": "3.0.1"
+  },
+  "workspaces": [
+    "web"
+  ]
+}
