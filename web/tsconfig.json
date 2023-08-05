@@ -14,6 +14,7 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
+    "baseUrl": ".",
     "paths": {
       "@/components/*": ["src/pages/_components/*"],
       "@/constants": ["src/constants/index"],
