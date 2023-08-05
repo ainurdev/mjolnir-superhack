@@ -13,7 +13,16 @@
      */
     "allowJs": true,
     "checkJs": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "@/components/*": ["src/pages/_components/*"],
+      "@/constants": ["src/constants/index"],
+      "@/icons/*": ["src/pages/_components/icons/*"],
+      "@/stores": ["src/stores/index"],
+      "@/types": ["src/types/index"],
+      "@/types/*": ["src/types/*"],
+      "@/utils": ["src/utils/index"]
+    }
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]
