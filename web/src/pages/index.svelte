@@ -1,1 +1,8 @@
-<h1 class="text-3xl text-blue-500">Hello</h1>
+<script>
+  import { onMount } from "svelte";
+  import { goto } from "@roxi/routify";
+
+  onMount(() => {
+    $goto("/login");
+  });
+</script>
