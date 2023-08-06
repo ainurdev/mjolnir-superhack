@@ -25,6 +25,12 @@
       "@/utils": ["src/utils/index"]
     }
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "src/*.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
