@@ -22,12 +22,20 @@
     <Logo />
     <h1 class="text-2xl text-primary-400 font-black">Mjolnir</h1>
   </a>
-  <button
-    on:click={onLogout}
-    aria-label="log out"
-    title="Log out"
-    class="rounded-3xl bg-zinc-950 border-zinc-800 border px-4 py-2"
-  >
-    Log out
-  </button>
+  <div class="flex items-center gap-2">
+    <a
+      href={$url("/stations")}
+      class="px-4 py-2 font-bold text-sm rounded-3xl bg-primary-500"
+    >
+      Your Stations
+    </a>
+    <button
+      on:click={onLogout}
+      aria-label="log out"
+      title="Log out"
+      class="rounded-3xl text-sm font-bold bg-zinc-950 border-zinc-800 border px-4 py-2"
+    >
+      Log out
+    </button>
+  </div>
 </header>
