@@ -1,0 +1,12 @@
+{
+  "extends": "solhint:recommended",
+  "rules": {
+    "compiler-version": false,
+    "func-visibility": ["warn", { "ignoreConstructors": true }],
+    "func-param-name-mixedcase": "warn",
+    "modifier-name-mixedcase": "warn",
+    "named-parameters-mapping": "warn",
+    "private-vars-leading-underscore": "warn",
+    "ordering": "warn"
+  }
+}
