@@ -2,6 +2,8 @@
   import { url } from "@roxi/routify";
   import { DEFAULT_STATION } from "@/constants";
   import type { stationType } from "@/types";
+  import UserIcon from "@/icons/User.svelte";
+  import ClockIcon from "@/icons/Clock.svelte";
 
   export let station: stationType = DEFAULT_STATION;
 </script>
@@ -27,11 +29,17 @@
     <p class="line-clamp-2">
       {station.description}
     </p>
-    <span class="text-xs text-zinc-400 mt-2">
-      Last stream {station.last_stream}
-    </span>
-    <span class="text-xs text-zinc-400 mt-1">
-      {station.subscribers} subscribers
-    </span>
+    <div class="flex items-center gap-1 mt-2">
+      <ClockIcon class="w-4 h-4 fill-zinc-300" />
+      <span class="text-xs text-zinc-400">
+        Last stream {station.last_stream}
+      </span>
+    </div>
+    <div class="flex items-center gap-1 mt-1">
+      <UserIcon class="w-4 h-4 fill-zinc-300" />
+      <span class="text-xs text-zinc-400">
+        {station.subscribers} subscribers
+      </span>
+    </div>
   </div>
 </a>

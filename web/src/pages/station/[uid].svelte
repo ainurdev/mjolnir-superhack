@@ -36,8 +36,8 @@
           </p>
         </div>
       </div>
-      <button class="bg-blue-400 shrink-0 rounded-3xl px-5 py-3 font-bold">
-        Subscribe $20
+      <button class="bg-primary-400 shrink-0 rounded-3xl px-5 py-3 font-bold">
+        Subscribe ${station.monthly_fee}
       </button>
     </div>
   </div>
