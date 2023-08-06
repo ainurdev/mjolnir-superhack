@@ -1,0 +1,12 @@
+{
+  "name": "@mjolnir/contracts",
+  "private": true,
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "hardhat test --typecheck"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.17.1"
+  }
+}
