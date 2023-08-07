@@ -86,7 +86,7 @@ export const request = async <T>(
     };
 
     xhr.onerror = () => {
-        // @ts-ignore
+      // @ts-ignore
       reject(new RequestError(xhr));
     };
 
@@ -111,15 +111,14 @@ export const request = async <T>(
 };
 
 class RequestError extends Error {
-    private response: Response;
-  
-    constructor(response: Response, message?: string) {
-      super(message);
-      this.response = response;
-    }
-  
-    isUnauthorized(): boolean {
-      return this.response.status === 401;
-    }
+  private response: Response;
+
+  constructor(response: Response, message?: string) {
+    super(message);
+    this.response = response;
   }
-  
+
+  isUnauthorized(): boolean {
+    return this.response.status === 401;
+  }
+}

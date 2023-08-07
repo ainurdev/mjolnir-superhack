@@ -1,12 +1,12 @@
 <script lang="ts">
   import { url } from "@roxi/routify";
-  import type { stationType } from "@/types";
+  import type { Station } from "@/types";
   import { DEFAULT_STATION } from "@/constants";
 
   import UserIcon from "@/icons/User.svelte";
   import ClockIcon from "@/icons/Clock.svelte";
 
-  export let station: stationType = DEFAULT_STATION;
+  export let station: Station = DEFAULT_STATION;
 </script>
 
 <a

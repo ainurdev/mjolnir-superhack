@@ -3,11 +3,11 @@
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { DEFAULT_STATION } from "@/constants";
-  import type { stationType } from "@/types";
+  import type { Station } from "@/types";
   import PlusIcon from "@/icons/Plus.svelte";
   import CreatorStation from "../_components/CreatorStation.svelte";
 
-  const stations: stationType[] = new Array(2).fill(DEFAULT_STATION);
+  const stations: Station[] = new Array(2).fill(DEFAULT_STATION);
 </script>
 
 <div

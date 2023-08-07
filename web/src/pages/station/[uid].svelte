@@ -1,11 +1,32 @@
 <script lang="ts">
-  import { params } from "@roxi/routify";
-  import { quintOut } from "svelte/easing";
-  import { fly } from "svelte/transition";
-  import { DEFAULT_STATION } from "@/constants";
+  import { params } from '@roxi/routify';
+  import { quintOut } from 'svelte/easing';
+  import { fly } from 'svelte/transition';
+  import { DEFAULT_STATION } from '@/constants';
+  import { onMount } from 'svelte';
+  import type { Station } from '@/types';
+  import { request } from '@/utils';
 
   $: stationUID = $params.uid;
   $: station = DEFAULT_STATION;
+
+  const getStation = async () => {
+    const response: any = await request(
+      `https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations?uid=${stationUID}`,
+      {
+        method: 'GET',
+        ignoreBaseUrl: true,
+      },
+    );
+
+    if (response && response.stations) {
+      station = response.stations[0];
+    }
+  };
+
+  onMount(async () => {
+    await getStation();
+  });
 </script>
 
 {#key stationUID}

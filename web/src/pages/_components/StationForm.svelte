@@ -1,9 +1,9 @@
 <script lang="ts">
   import ImgUpload from "./ImgUpload.svelte";
-  import type { stationType } from "@/types";
+  import type { Station } from "@/types";
 
   export let state: "create" | "edit" = "create";
-  export let station: stationType = {
+  export let station: Station = {
     name: "",
     cover: "",
     avatar: "",
