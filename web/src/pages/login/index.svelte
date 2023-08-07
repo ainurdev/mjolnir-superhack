@@ -1,13 +1,46 @@
-<script>
+<script lang="ts">
   import { goto } from "@roxi/routify";
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
-  import Logo from "../_components/Logo.svelte";
   import MetamaskIcon from "@/icons/Metamask.svelte";
+  import { onMount } from "svelte";
 
-  const continueViaMetamask = () => {
-    $goto("/home");
+  import Logo from "../_components/Logo.svelte";
+
+  let etherumInstalled: boolean = false,
+    shouldConnectWallet: boolean = false;
+
+  const continueViaMetamask = async () => {
+    let wallets = await window.ethereum.request({ method: "eth_accounts" });
+    if (!wallets || wallets.length === 0) {
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      wallets = await window.ethereum.request({ method: "eth_accounts" });
+
+      if (!wallets || wallets.length === 0) {
+        shouldConnectWallet = true;
+        return;
+      }
+    }
+
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+
+    if (wallets && wallets.length > 0 && chainId) {
+      $goto("/home");
+    } else {
+      alert("Please connect your wallet to continue.");
+    }
   };
+
+  const requestAccounts = async () => {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    continueViaMetamask();
+  };
+
+  onMount(() => {
+    if (window.ethereum) {
+      etherumInstalled = true;
+    }
+  });
 </script>
 
 <div
@@ -32,27 +65,49 @@
       This is your streaming platform that you can trust and earn all your
       profits
     </p>
-    <button
-      on:click={continueViaMetamask}
-      class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+
+    {#if etherumInstalled}
+      {#if shouldConnectWallet}
+        <button
+          on:click={requestAccounts}
+          class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+        >
+          <span> Connect Wallet </span>
+          <MetamaskIcon class="w-6 h-6 fill-white" />
+        </button>
+      {:else}
+        <button
+          on:click={continueViaMetamask}
+          class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+        >
+          <span> Continue via Metamask </span>
+          <MetamaskIcon class="w-6 h-6 fill-white" />
+        </button>
+      {/if}
+    {:else}
+      <a
+        href="https://metamask.io/download/"
+        target="_blank"
+        class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+      >
+        <span> Install Metamask </span>
+        <MetamaskIcon class="w-6 h-6 fill-white" />
+      </a>
+    {/if}
+    <svg
+      class="absolute -z-10 scale-[225] scale-x-[175]"
+      id="bg-svg"
+      viewBox="0 0 900 600"
     >
-      <span> Continue via Metamask </span>
-      <MetamaskIcon class="w-6 h-6 fill-white" />
-    </button>
+      <g transform="translate(445.7878723114449 324.06827144594604)">
+        <path
+          d="M172.1 -183.3C203.8 -140.5 196.9 -70.2 179.5 -17.4C162 35.4 134 70.7 102.4 98.5C70.7 126.4 35.4 146.7 -17.7 164.4C-70.7 182 -141.4 197.1 -169.6 169.3C-197.8 141.4 -183.4 70.7 -169.6 13.8C-155.8 -43.1 -142.6 -86.3 -114.4 -129.1C-86.3 -171.9 -43.1 -214.5 13.6 -228C70.2 -241.6 140.5 -226.1 172.1 -183.3"
+          fill="#18181b"
+          style="transition: all 0.3s ease 0s;"
+        />
+      </g>
+    </svg>
   </div>
-  <svg
-    class="absolute -z-10 scale-[225] scale-x-[175]"
-    id="bg-svg"
-    viewBox="0 0 900 600"
-  >
-    <g transform="translate(445.7878723114449 324.06827144594604)">
-      <path
-        d="M172.1 -183.3C203.8 -140.5 196.9 -70.2 179.5 -17.4C162 35.4 134 70.7 102.4 98.5C70.7 126.4 35.4 146.7 -17.7 164.4C-70.7 182 -141.4 197.1 -169.6 169.3C-197.8 141.4 -183.4 70.7 -169.6 13.8C-155.8 -43.1 -142.6 -86.3 -114.4 -129.1C-86.3 -171.9 -43.1 -214.5 13.6 -228C70.2 -241.6 140.5 -226.1 172.1 -183.3"
-        fill="#18181b"
-        style="transition: all 0.3s ease 0s;"
-      />
-    </g>
-  </svg>
 </div>
 
 <style>
