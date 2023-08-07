@@ -18,15 +18,11 @@
     }}
     class="flex flex-col items-center relative"
   >
-    <img class="cover" src={station.cover_url} alt="cover" />
+    <img class="cover" src={station.cover} alt="cover" />
     <div class="w-[90%] aspect-video rounded-3xl bg-zinc-800 mt-24 px-5" />
     <div class="flex w-full items-start justify-between px-20 mt-10 self-start">
       <div class="flex gap-5">
-        <img
-          class="rounded-full w-24 h-24"
-          src={station.avatar_url}
-          alt="avatar"
-        />
+        <img class="rounded-full w-24 h-24" src={station.avatar} alt="avatar" />
         <div class="flex flex-col">
           <h2 class="text-3xl font-black">
             {station.name}

@@ -11,30 +11,35 @@
 </script>
 
 <div
-  in:fly={{
-    duration: 300,
-    y: -10,
-    opacity: 0.5,
-    easing: quintOut,
-  }}
   class="flex items-center justify-center px-5 flex-col relative overflow-hidden w-full h-[100dvh]"
 >
-  <Logo />
-  <h1 class="text-4xl text-white font-bold mt-8 text-center">
-    Welcome to
-    <span class="font-black text-primary-400">Mjolnir</span>
-  </h1>
-  <p class="mt-5 text-xl text-center max-w-xl text-zinc-200">
-    This is your streaming platform that you can trust and earn all your profits
-  </p>
-  <button
-    on:click={continueViaMetamask}
-    class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+  <div
+    in:fly={{
+      delay: 500,
+      duration: 300,
+      y: -20,
+      opacity: 0.2,
+      easing: quintOut,
+    }}
+    class="flex flex-col items-center justify-center"
   >
-    <span> Continue via Metamask </span>
-    <MetamaskIcon class="w-6 h-6 fill-white" />
-  </button>
-
+    <Logo />
+    <h1 class="text-4xl text-white font-bold mt-8 text-center">
+      Welcome to
+      <span class="font-black text-primary-400">Mjolnir</span>
+    </h1>
+    <p class="mt-5 text-xl text-center max-w-xl text-zinc-200">
+      This is your streaming platform that you can trust and earn all your
+      profits
+    </p>
+    <button
+      on:click={continueViaMetamask}
+      class="rounded-3xl px-5 py-3 flex items-center gap-2 font-bold bg-primary-500 mt-14"
+    >
+      <span> Continue via Metamask </span>
+      <MetamaskIcon class="w-6 h-6 fill-white" />
+    </button>
+  </div>
   <svg
     class="absolute -z-10 scale-[225] scale-x-[175]"
     id="bg-svg"

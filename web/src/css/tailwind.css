@@ -15,4 +15,13 @@
   a {
     @apply hover:brightness-[.85];
   }
+
+  input,
+  textarea {
+    @apply !text-sm font-medium !bg-zinc-900 !rounded-3xl !accent-primary-400 !border-zinc-800 px-3 py-2;
+  }
+
+  textarea {
+    @apply resize-none;
+  }
 }

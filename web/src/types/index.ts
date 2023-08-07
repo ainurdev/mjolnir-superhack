@@ -1,10 +1,10 @@
 export type stationType = {
-  uid: string;
+  uid?: string;
   name: string;
   description: string;
-  avatar_url: string;
-  cover_url: string;
+  avatar: string;
+  cover: string;
   monthly_fee: number;
-  subscribers: number;
-  last_stream: string;
+  subscribers?: number;
+  last_stream?: string;
 };

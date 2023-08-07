@@ -14,7 +14,7 @@
   }}
   class="flex flex-col items-center"
 >
-  <div class="flex flex-wrap justify-center gap-5 my-10">
+  <div class="flex flex-wrap justify-center gap-5 mb-5">
     {#each new Array(12) as _}
       <StationCard />
     {/each}
