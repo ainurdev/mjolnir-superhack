@@ -6,6 +6,14 @@ import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/I
 import {IMjolnirSubscriptions} from "./IMjolnirSubscriptions.sol";
 
 interface IMjolnirStations is IERC721, IERC721Metadata {
+    function createStation(
+        address to,
+        string calldata cid,
+        bytes calldata data
+    ) external;
+
+    function setStationCID(uint256 stationId, string calldata cid) external;
+
     function subscriptionsContract()
         external
         view

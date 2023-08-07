@@ -8,5 +8,5 @@ import {IMjolnirStations} from "./IMjolnirStations.sol";
 interface IMjolnirSubscriptions is IERC721, IERC721Metadata {
     function stationsContract() external view returns (IMjolnirStations);
 
-    function station(uint256 tokenID) external view returns (uint256 stationID);
+    function station(uint256 tokenId) external view returns (uint256 stationId);
 }
