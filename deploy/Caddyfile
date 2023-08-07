@@ -1,0 +1,30 @@
+gettv-srs.testing.gettv.ainur.dev {
+    route /webrtc/* {
+        uri strip_prefix /webrtc/
+        reverse_proxy localhost:1990
+    }
+
+    route /rtc/* {
+        uri strip_prefix /rtc/
+        reverse_proxy localhost:8088
+    }
+
+    route /files/* {
+        uri strip_prefix /files/
+        reverse_proxy localhost:8080
+    }
+
+    route /api/* {
+        uri strip_prefix /api/
+        reverse_proxy localhost:1985
+    }
+
+    route /rtmp/* {
+        uri strip_prefix /rtmp/
+        reverse_proxy localhost:1935
+    }
+
+   log {
+        output file /var/log/access.log
+   }
+}
