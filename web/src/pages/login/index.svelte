@@ -1,9 +1,10 @@
 <script lang="ts">
   import { goto } from "@roxi/routify";
+  import { onMount } from "svelte";
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
   import MetamaskIcon from "@/icons/Metamask.svelte";
-  import { onMount } from "svelte";
+  import { userStore } from "@/stores";
 
   import Logo from "../_components/Logo.svelte";
 
@@ -25,6 +26,10 @@
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
 
     if (wallets && wallets.length > 0 && chainId) {
+      userStore.setUser({
+        wallet: wallets[0],
+        chainId: chainId,
+      });
       $goto("/home");
     } else {
       alert("Please connect your wallet to continue.");
@@ -36,9 +41,21 @@
     continueViaMetamask();
   };
 
-  onMount(() => {
+  onMount(async () => {
     if (window.ethereum) {
       etherumInstalled = true;
+      let wallets = await window.ethereum.request({ method: "eth_accounts" });
+
+      if (
+        wallets &&
+        wallets.length > 0 &&
+        $userStore.user &&
+        $userStore.user.wallet === wallets[0]
+      ) {
+        $goto("/home");
+      } else {
+        $goto("/login");
+      }
     }
   });
 </script>

@@ -3,8 +3,10 @@
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
   import Logo from "./Logo.svelte";
+  import { userStore } from "@/stores";
 
   const onLogout = () => {
+    userStore.setUser(undefined);
     $goto("/login");
   };
 </script>

@@ -1,4 +1,4 @@
-export type stationType = {
+export type Station = {
   uid?: string;
   name: string;
   description: string;
@@ -7,4 +7,9 @@ export type stationType = {
   monthly_fee: number;
   subscribers?: number;
   last_stream?: string;
+};
+
+export type User = {
+  wallet: string;
+  chainId: string;
 };

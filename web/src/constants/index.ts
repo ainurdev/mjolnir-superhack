@@ -1,6 +1,6 @@
-import type { stationType } from "@/types";
+import type { Station } from "@/types";
 
-export const DEFAULT_STATION: stationType = {
+export const DEFAULT_STATION: Station = {
   uid: "mjolnir420",
   name: "Mjolnir Station",
   description:
@@ -11,3 +11,5 @@ export const DEFAULT_STATION: stationType = {
   subscribers: 69,
   last_stream: "2 hours ago",
 };
+
+export const KEY = "mjolnirtv";
