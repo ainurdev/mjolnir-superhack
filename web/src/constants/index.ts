@@ -1,5 +1,7 @@
 import type { Station } from '@/types';
 
+export const BASE_URL = 'https://gettv-srs.testing.gettv.ainur.dev';
+
 export const DEFAULT_STATION: Station = {
   uid: 'mjolnir420',
   name: 'Mjolnir Station',
@@ -13,3 +15,4 @@ export const DEFAULT_STATION: Station = {
 };
 
 export const KEY = 'mjolnirtv';
+
