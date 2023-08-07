@@ -40,7 +40,7 @@ describe("MjolnirStations", function () {
       const receipt = await tx.wait();
       const logs = receipt?.logs
         .filter((log) => log.address === stations.target)
-        .map((log) => stations.interface.parseLog(log as any)) as any;
+        .map((log) => stations.interface.parseLog(log));
       const stationId = logs[0].args[2];
       await expect(stations.ownerOf(stationId)).to.eventually.equal(
         owner1.address,
