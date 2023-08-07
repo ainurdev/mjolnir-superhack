@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-import { KEY } from "@/constants";
-import type { User } from "@/types";
+import { KEY } from '@/constants';
+import type { User } from '@/types';
 
 export type UserStore = {
   user?: User;
@@ -19,7 +19,7 @@ const createUserStore = () => {
     }
   }
 
-  subscribe((data) => {
+  subscribe(data => {
     localStorage.setItem(KEY, JSON.stringify(data));
   });
 
@@ -31,7 +31,7 @@ const createUserStore = () => {
       set({});
     },
     setUser: (user: User) => {
-      update((data) => ({ ...data, user }));
+      update(data => ({ ...data, user }));
     },
   };
 };

@@ -1,6 +1,25 @@
 {
-  "plugins": ["prettier-plugin-solidity", "prettier-plugin-svelte"],
+  "plugins": [
+    "prettier-plugin-solidity",
+    "prettier-plugin-svelte",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
   "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte",
+        "svelteSortOrder": "scripts-options-markup-styles"
+      }
+    },
     {
       "files": "*.sol",
       "options": {
@@ -12,5 +31,15 @@
         "bracketSpacing": false
       }
     }
-  ]
+  ],
+  "importOrder": [
+    "^/(.*)$",
+    "^@/(.*)$",
+    "^../(.*)$",
+    "^./(.*)$",
+    "^@/icons/(.*)$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true
 }
