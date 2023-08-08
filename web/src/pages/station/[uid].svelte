@@ -5,7 +5,6 @@
   import { onMount } from 'svelte';
   import { request } from '@/utils';
   import type { Station } from '@/types';
-  import fit from 'fit.js';
   import dash from 'dashjs'
   
   let videoPlayer: HTMLVideoElement;
@@ -33,7 +32,6 @@
     let player = dash.MediaPlayer().create();
     player.initialize(videoPlayer, station.uri, true);
 
-    fit(videoPlayer, container, { watch: true });
   });
 </script>
 
