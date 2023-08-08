@@ -10,7 +10,7 @@ contract MjolnirSubscriptions is
     ERC721("MjolnirSubscriptions", "MSB")
 {
     IMjolnirStations private immutable _STATIONS_CONTRACT;
-    mapping(uint256 tokenID => uint256 stationID) public station;
+    mapping(uint256 tokenId => uint256 stationId) public station;
 
     constructor(IMjolnirStations stationsContract_) {
         _STATIONS_CONTRACT = stationsContract_;
