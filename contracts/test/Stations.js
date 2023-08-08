@@ -13,6 +13,19 @@ describe("Stations", function () {
     return { stations, owner1 };
   }
 
+  async function deployWithStationFixture() {
+    const base = await deployFixture();
+    const { stations, owner1 } = base;
+    const cid = "test cid";
+    const tx = await stations.createStation(cid, owner1, new Uint8Array());
+    const receipt = await tx.wait();
+    const stationId1 = receipt?.logs
+      .filter((log) => log.address === stations.target)
+      .map((log) => stations.interface.parseLog(log))
+      .find((log) => (log.name = "Transfer")).args[2];
+    return { ...base, stationId1 };
+  }
+
   describe("Deployment", async function () {
     it("Should have right name", async function () {
       const { stations } = await loadFixture(deployFixture);
@@ -78,43 +91,77 @@ describe("Stations", function () {
 
   describe("Updating Station", async function () {
     it("Should revert with NotStationOwner on wrong caller", async function () {
-      const { stations, owner1 } = await loadFixture(deployFixture);
-      const old_cid = "old test cid";
-      const tx = await stations.createStation(
-        old_cid,
-        owner1,
-        new Uint8Array(),
+      const { stations, stationId1 } = await loadFixture(
+        deployWithStationFixture,
       );
-      const receipt = await tx.wait();
-      const stationId = receipt?.logs
-        .filter((log) => log.address === stations.target)
-        .map((log) => stations.interface.parseLog(log))
-        .find((log) => (log.name = "Transfer")).args[2];
-
       const new_cid = "new test cid";
       await expect(
-        stations.updateStation(stationId, new_cid),
+        stations.updateStation(stationId1, new_cid),
       ).to.revertedWithCustomError(stations, "NotStationOwner");
     });
 
     it("Should emit StationUpdated event with correct stationId and cid", async function () {
-      const { stations, owner1 } = await loadFixture(deployFixture);
-      const old_cid = "old test cid";
-      const tx = await stations.createStation(
-        old_cid,
-        owner1,
-        new Uint8Array(),
+      const { stations, owner1, stationId1 } = await loadFixture(
+        deployWithStationFixture,
       );
-      const receipt = await tx.wait();
-      const stationId = receipt?.logs
-        .filter((log) => log.address === stations.target)
-        .map((log) => stations.interface.parseLog(log))
-        .find((log) => (log.name = "Transfer")).args[2];
-
       const new_cid = "new test cid";
-      await expect(stations.connect(owner1).updateStation(stationId, new_cid))
+      await expect(stations.connect(owner1).updateStation(stationId1, new_cid))
         .to.emit(stations, "StationUpdated")
-        .withArgs(stationId, new_cid);
+        .withArgs(stationId1, new_cid);
+    });
+  });
+
+  describe("Publish Public Stream", async function () {
+    it("Should revert with NotStationOwner on wrong caller", async function () {
+      const { stations, stationId1 } = await loadFixture(
+        deployWithStationFixture,
+      );
+      const stream_cid = "test stream cid";
+      await expect(
+        stations.publishPublicStream(stationId1, stream_cid),
+      ).to.revertedWithCustomError(stations, "NotStationOwner");
+    });
+
+    it("Should emit PublicStreamPublished event with correct stationId and cid", async function () {
+      const { stations, owner1, stationId1 } = await loadFixture(
+        deployWithStationFixture,
+      );
+      const stream_cid = "test stream cid";
+      await expect(
+        stations.updateStation(stationId1, stream_cid),
+      ).to.revertedWithCustomError(stations, "NotStationOwner");
+      await expect(
+        stations.connect(owner1).publishPublicStream(stationId1, stream_cid),
+      )
+        .to.emit(stations, "PublicStreamPublished")
+        .withArgs(stationId1, stream_cid);
+    });
+  });
+
+  describe("Publish Private Stream", async function () {
+    it("Should revert with NotStationOwner on wrong caller", async function () {
+      const { stations, stationId1 } = await loadFixture(
+        deployWithStationFixture,
+      );
+      const stream_cid = "test stream cid";
+      await expect(
+        stations.publishPrivateStream(stationId1, stream_cid),
+      ).to.revertedWithCustomError(stations, "NotStationOwner");
+    });
+
+    it("Should emit PrivateStreamPublished event with correct stationId and cid", async function () {
+      const { stations, owner1, stationId1 } = await loadFixture(
+        deployWithStationFixture,
+      );
+      const stream_cid = "test stream cid";
+      await expect(
+        stations.updateStation(stationId1, stream_cid),
+      ).to.revertedWithCustomError(stations, "NotStationOwner");
+      await expect(
+        stations.connect(owner1).publishPrivateStream(stationId1, stream_cid),
+      )
+        .to.emit(stations, "PrivateStreamPublished")
+        .withArgs(stationId1, stream_cid);
     });
   });
 });

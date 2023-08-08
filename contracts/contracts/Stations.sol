@@ -40,6 +40,20 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
         emit StationUpdated(stationId, cid);
     }
 
+    function publishPublicStream(
+        uint256 stationId,
+        string calldata cid
+    ) external override onlyStationOwner(stationId) {
+        emit PublicStreamPublished(stationId, cid);
+    }
+
+    function publishPrivateStream(
+        uint256 stationId,
+        string calldata cid
+    ) external override onlyStationOwner(stationId) {
+        emit PrivateStreamPublished(stationId, cid);
+    }
+
     function subscriptionsContract()
         external
         view
