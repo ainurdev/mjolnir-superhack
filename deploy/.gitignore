@@ -1,0 +1,5 @@
+# Need to find better place for tfvars in future
+graph-deployment/terraform/*/terraform.tfvars
+graph-deployment/terraform/*/.terraform*
+graph-deployment/terraform/*/terraform.tfstate*
+graph-deployment/terraform/azure/private_ssh_key

@@ -1,0 +1,26 @@
+# Email that would be used during issuing https certs. It would be used by let's encrypt to notify about expiring certs.
+email: info@ainur.dev
+
+postgresDatasource:
+  url: postgres-postgres.graph:5432 # Postgres host, format postgres-postgres.<graph-node namespace>:5432
+  user: node
+  db: node
+  password: obiY9jyLpRmlW5AxH7Qo9X2rObXqbaYSsBdE5I8HrZSjjQxVffZgSpe7uec7N3CX
+
+# Enables infra components
+ingressNginx:
+  enabled: true
+postgresOperator:
+  enabled: true
+certManager:
+  enabled: true
+letsencryptProdIssuer:
+  enabled: true
+kubernetesDashboard:
+  enabled: true
+kubernetesDashboardSA:
+  enabled: true
+prometheusStack:
+  enabled: true
+graphGrafanaDashboards:
+  enabled: true

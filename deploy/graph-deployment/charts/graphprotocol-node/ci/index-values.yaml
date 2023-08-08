@@ -1,0 +1,18 @@
+postgres:
+  db: db
+  host: host
+  user: user
+  password:
+    fromSecret:
+      name: name
+      key: key
+
+config:
+  ipfs: ipfs
+  ethereum: ethereum
+
+role: "index-node"
+
+service:
+  annotations:
+    test: "test"
