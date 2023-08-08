@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
 
   import Logo from "../_components/Logo.svelte";
+    import accounts from "src/store/accounts";
 
   let etherumInstalled: boolean = false,
     shouldConnectWallet: boolean = false;
@@ -25,6 +26,7 @@
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
 
     if (wallets && wallets.length > 0 && chainId) {
+      accounts.setWallet(wallets[0]);
       $goto("/home");
     } else {
       alert("Please connect your wallet to continue.");

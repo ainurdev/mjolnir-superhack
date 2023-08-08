@@ -11,3 +11,5 @@ export const DEFAULT_STATION: stationType = {
   subscribers: 69,
   last_stream: "2 hours ago",
 };
+
+export const LOCALSTORAGE_KEY = "mjolnir-superhack-";

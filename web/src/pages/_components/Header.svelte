@@ -1,12 +1,39 @@
-<script>
+<script lang="ts">
+  import { onMount } from "svelte";
   import { goto, url } from "@roxi/routify";
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
   import Logo from "./Logo.svelte";
+    import accounts from "src/store/accounts";
 
-  const onLogout = () => {
-    $goto("/login");
+  let isLoggedIn: boolean = false
+
+  const onAddAccounts = async () => {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
   };
+
+  const checkMetamaskLogin = async () => {
+    if (!window.ethereum) {
+      return
+    }
+
+    const wallets = await window.ethereum.request({ method: "eth_accounts" });
+    isLoggedIn = wallets.length > 0;
+
+    window.ethereum.on("accountsChanged", (wallets: string[]) => {
+      isLoggedIn = wallets.length > 0;
+      if (!isLoggedIn) {
+        accounts.removeWallet();
+        return
+      }
+
+      accounts.setWallet(wallets[0]);
+    });
+  };
+
+  onMount(() => {
+    checkMetamaskLogin();
+  })
 </script>
 
 <header
@@ -29,13 +56,19 @@
     >
       Your Stations
     </a>
-    <button
-      on:click={onLogout}
-      aria-label="log out"
-      title="Log out"
-      class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2"
-    >
-      Log out
-    </button>
+    {#if isLoggedIn}
+      <button
+        on:click={onAddAccounts}
+        aria-label="log out"
+        title="Log out"
+        class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2"
+      >
+        Add more accounts
+      </button>
+    {:else}
+      <a href={$url("/login")} class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2">
+        Log in
+      </a>
+    {/if}
   </div>
 </header>
