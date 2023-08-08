@@ -9,7 +9,7 @@
 </script>
 
 <a
-  href={$url("/station/:uid", { uid: station.uid })}
+  href={$url("/stream/:uid", { uid: station.uid })}
   class="max-w-md w-72 rounded-3xl bg-zinc-900"
 >
   <div class="flex px-5 items-center gap-4 font-bold">
