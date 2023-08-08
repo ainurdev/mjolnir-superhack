@@ -11,8 +11,10 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@roxi/routify": "^2.18.12",
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tailwindcss/forms": "^0.5.4",
     "@tsconfig/svelte": "^5.0.0",
     "autoprefixer": "^10.4.14",
     "npm-run-all": "^4.1.5",
@@ -23,5 +25,8 @@
     "tslib": "^2.6.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "dashjs": "^4.7.1"
   }
 }

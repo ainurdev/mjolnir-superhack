@@ -1,11 +1,11 @@
 <script lang="ts">
   import { url } from "@roxi/routify";
   import { DEFAULT_STATION } from "@/constants";
-  import type { stationType } from "@/types";
+  import type { Station } from "@/types";
   import UserIcon from "@/icons/User.svelte";
   import ClockIcon from "@/icons/Clock.svelte";
 
-  export let station: stationType = DEFAULT_STATION;
+  export let station: Station;
 </script>
 
 <a
@@ -14,17 +14,13 @@
 >
   <div class="flex px-5 items-center gap-4 font-bold">
     <img
-      src={station.avatar_url}
+      src={station.avatar}
       class="rounded-full w-14 h-14 relative top-3 shadow-md"
       alt="Station Avatar"
     />
     <h4 class="line-clamp-1">{station.name}</h4>
   </div>
-  <img
-    class="w-full aspect-video"
-    src={station.cover_url}
-    alt="station cover"
-  />
+  <img class="w-full aspect-video" src={station.cover} alt="station cover" />
   <div class="mx-5 my-4 flex flex-col">
     <p class="line-clamp-2">
       {station.description}
