@@ -7,6 +7,7 @@ export type Station = {
   monthly_fee: number;
   subscribers?: number;
   last_stream?: string;
+  uri?: string;
 };
 
 export type User = {
