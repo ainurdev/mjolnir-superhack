@@ -6,8 +6,10 @@ const { expect } = require("chai");
 
 describe("Stations", function () {
   async function deployFixture() {
+    const MockPolicy = await ethers.getContractFactory("MockPolicy");
+    const policy = await MockPolicy.deploy();
     const Stations = await ethers.getContractFactory("Stations");
-    const stations = await Stations.deploy();
+    const stations = await Stations.deploy(policy);
 
     const [, owner1] = await ethers.getSigners();
     return { stations, owner1 };
@@ -46,8 +48,9 @@ describe("Stations", function () {
         "Subscriptions",
         subscriptionsAddress,
       );
-      const stationsAddress = await subscriptions.stationsContract();
-      await expect(stations.target).to.equal(stationsAddress);
+      await expect(subscriptions.stationsContract()).to.eventually.equal(
+        stations.target,
+      );
     });
   });
 

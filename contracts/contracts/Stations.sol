@@ -2,8 +2,9 @@
 pragma solidity ^0.8.19;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {IStations} from "./IStations.sol";
-import {ISubscriptions} from "./ISubscriptions.sol";
+import {IStations} from "./interfaces/IStations.sol";
+import {ISubscriptions} from "./interfaces/ISubscriptions.sol";
+import {IPolicy} from "./interfaces/IPolicy.sol";
 import {Subscriptions} from "./Subscriptions.sol";
 
 contract Stations is IStations, ERC721("MjolnirStation", "MST") {
@@ -15,8 +16,8 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
         _;
     }
 
-    constructor() {
-        _SUBSCRIPTIONS_CONTRACT = new Subscriptions(this);
+    constructor(IPolicy policy) {
+        _SUBSCRIPTIONS_CONTRACT = new Subscriptions(this, policy);
     }
 
     function createStation(

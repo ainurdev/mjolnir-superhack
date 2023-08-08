@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "check": "hardhat check",
+    "console": "hardhat console",
     "build": "hardhat compile",
     "test": "hardhat test"
   },

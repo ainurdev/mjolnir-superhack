@@ -6,8 +6,10 @@ const { expect } = require("chai");
 
 describe("Subscriptions", function () {
   async function deployFixture() {
+    const MockPolicy = await ethers.getContractFactory("MockPolicy");
+    const policy = await MockPolicy.deploy();
     const Stations = await ethers.getContractFactory("Stations");
-    const stations = await Stations.deploy();
+    const stations = await Stations.deploy(policy);
     const subscriptionsAddress = await stations.subscriptionsContract();
     const subscriptions = await ethers.getContractAt(
       "Subscriptions",
@@ -28,7 +30,7 @@ describe("Subscriptions", function () {
     };
     const stationId1 = await createStation(owner1);
 
-    return { stations, subscriptions, stationId1, owner1, user1 };
+    return { policy, subscriptions, stationId1, user1 };
   }
 
   describe("Deployment", async function () {
@@ -43,28 +45,40 @@ describe("Subscriptions", function () {
       const symbol = await subscriptions.symbol();
       expect(symbol).to.equal("MSB");
     });
+
+    it("Should have right policyContract", async function () {
+      const { policy, subscriptions } = await loadFixture(deployFixture);
+      expect(subscriptions.policyContract()).to.eventually.equal(policy.target);
+    });
   });
 
   describe("Creating Subscription", async function () {
     it("Should emit Transfer from zero_address to to_address", async function () {
-      const { subscriptions, stationId1, user1 } = await loadFixture(
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
         deployFixture,
       );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
       await expect(
-        subscriptions.createSubscription(stationId1, user1, new Uint8Array()),
+        subscriptions.createSubscription(stationId1, user1, new Uint8Array(), {
+          value: createPrice,
+        }),
       )
         .to.emit(subscriptions, "Transfer")
         .withArgs(ethers.ZeroAddress, user1.address, () => true);
     });
 
     it("Should subscription owner have been set correctly", async function () {
-      const { subscriptions, stationId1, user1 } = await loadFixture(
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
         deployFixture,
       );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
       const tx = await subscriptions.createSubscription(
         stationId1,
         user1,
         new Uint8Array(),
+        { value: createPrice },
       );
       const receipt = await tx.wait();
       const subscriptionId = receipt?.logs
@@ -77,13 +91,16 @@ describe("Subscriptions", function () {
     });
 
     it("Should emit SubscriptionCreated event with correct stationId and subscriptionId", async function () {
-      const { subscriptions, stationId1, user1 } = await loadFixture(
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
         deployFixture,
       );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
       const tx = await subscriptions.createSubscription(
         stationId1,
         user1,
         new Uint8Array(),
+        { value: createPrice },
       );
       const receipt = await tx.wait();
       const subscriptionId = receipt?.logs
@@ -93,6 +110,52 @@ describe("Subscriptions", function () {
       await expect(tx)
         .to.emit(subscriptions, "SubscriptionCreated")
         .withArgs(stationId1, subscriptionId);
+    });
+
+    it("Should revert on InsufficientFunds", async function () {
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
+        deployFixture,
+      );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
+      await expect(
+        subscriptions.createSubscription(stationId1, user1, new Uint8Array(), {
+          value: createPrice / BigInt(2),
+        }),
+      ).to.revertedWithCustomError(subscriptions, "InsufficientFunds");
+    });
+
+    it("Should return exceed funds", async function () {
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
+        deployFixture,
+      );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
+      await expect(() =>
+        subscriptions
+          .connect(user1)
+          .createSubscription(stationId1, user1, new Uint8Array(), {
+            value: createPrice * BigInt(2),
+          }),
+      ).to.changeEtherBalance(user1, -createPrice);
+    });
+
+    it("Should revert on invalid stationId", async function () {
+      const { policy, subscriptions, stationId1, user1 } = await loadFixture(
+        deployFixture,
+      );
+      const number = await subscriptions.subscribers(stationId1);
+      const createPrice = await policy.createSubscriptionPrice(number);
+      await expect(
+        subscriptions.createSubscription(
+          ethers.keccak256(ethers.toUtf8Bytes("random stationId")),
+          user1,
+          new Uint8Array(),
+          {
+            value: createPrice,
+          },
+        ),
+      ).to.reverted;
     });
   });
 });
