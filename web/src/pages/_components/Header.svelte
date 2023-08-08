@@ -4,13 +4,9 @@
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
   import Logo from "./Logo.svelte";
-    import accounts from "src/store/accounts";
+  import accounts from "../../store/accounts";
 
   let isLoggedIn: boolean = false
-
-  const onAddAccounts = async () => {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-  };
 
   const checkMetamaskLogin = async () => {
     if (!window.ethereum) {
@@ -24,6 +20,7 @@
       isLoggedIn = wallets.length > 0;
       if (!isLoggedIn) {
         accounts.removeWallet();
+        $goto("/login");
         return
       }
 
@@ -57,14 +54,11 @@
       Your Stations
     </a>
     {#if isLoggedIn}
-      <button
-        on:click={onAddAccounts}
-        aria-label="log out"
-        title="Log out"
-        class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2"
-      >
-        Add more accounts
-      </button>
+      <span
+        title="You can change your account or disconnect in Metamask"
+        class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2">
+        Connected to Metamask
+      </span>
     {:else}
       <a href={$url("/login")} class="rounded-3xl text-xs sm:text-sm font-bold bg-zinc-950 border-zinc-800 border sm:px-4 px-3 py-2">
         Log in
