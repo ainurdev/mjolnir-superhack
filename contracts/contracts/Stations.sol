@@ -11,6 +11,8 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
     ISubscriptions private immutable _SUBSCRIPTIONS_CONTRACT;
     uint256 private _nextSalt;
 
+    mapping(uint256 stationId => uint256 monthlyFee) public stationMonthlyFee;
+
     modifier onlyStationOwner(uint256 stationId) {
         if (msg.sender != ownerOf(stationId)) revert NotStationOwner();
         _;
@@ -21,6 +23,7 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
     }
 
     function createStation(
+        uint256 monthlyFee,
         string calldata cid,
         address to,
         bytes calldata data
@@ -31,14 +34,24 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
         );
         _safeMint({tokenId: stationId, to: to, data: data});
         _nextSalt = salt + 1;
-        emit StationCreated(stationId, cid);
+
+        stationMonthlyFee[stationId] = monthlyFee;
+        emit StationCreated({stationId:stationId, monthlyFee:monthlyFee, cid:cid});
     }
 
-    function updateStation(
+    function updateStationFee(
+        uint256 stationId,
+        uint256 monthlyFee
+    ) external override onlyStationOwner(stationId) {
+        stationMonthlyFee[stationId] = monthlyFee;
+        emit StationFeeUpdated(stationId, monthlyFee);
+    }
+
+    function updateStationCid(
         uint256 stationId,
         string calldata cid
     ) external override onlyStationOwner(stationId) {
-        emit StationUpdated(stationId, cid);
+        emit StationCidUpdated(stationId, cid);
     }
 
     function publishPublicStream(
