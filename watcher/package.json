@@ -1,0 +1,10 @@
+{
+  "name": "@mjolnir/watcher",
+  "private": true,
+  "devDependencies": {
+    "electron": "^25.4.0"
+  },
+  "scripts": {
+    "start": "electron ./main.js"
+  }
+}
