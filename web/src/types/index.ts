@@ -39,4 +39,3 @@ export type RequestOptions = {
 export type Response<T> = T;
 
 export type RequestResult<T> = Response<T> | undefined;
-
