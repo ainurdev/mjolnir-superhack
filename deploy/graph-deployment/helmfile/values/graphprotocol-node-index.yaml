@@ -8,12 +8,7 @@ config:
     mainnet:
       providers:
       - label: mainnet
-        url: https://eth.llamarpc.com
-        features: [ archive ]
-    rinkeby:
-      providers:
-      - label: opmainnnet
-        url: https://optimism.meowrpc.com	
+        url: https://rpc-athena.ardescan.com
         features: [ archive ]
 
 postgres:
