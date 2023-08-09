@@ -5,12 +5,8 @@
   import { onMount } from 'svelte';
   import { request } from '@/utils';
   import type { Station } from '@/types';
-  import dash from 'dashjs'
-  
-  let videoPlayer: HTMLVideoElement;
-  let container: HTMLDivElement;
+  import Player from '../_components/Player.svelte';
 
-  $: stationUID = $params.uid;
   let station: Station;
 
   const getStation = async () => {
@@ -29,10 +25,9 @@
 
   onMount(async () => {
     await getStation();
-    let player = dash.MediaPlayer().create();
-    player.initialize(videoPlayer, station.uri, true);
-
   });
+
+  $: stationUID = $params.uid;
 </script>
 
 {#if station}
@@ -44,19 +39,16 @@
         opacity: 0.2,
         easing: quintOut,
       }}
-      class="flex flex-col items-center relative"
+      class="flex flex-col items-center relative sm:px-20"
     >
       <img class="cover" src={station.cover} alt="cover" />
-      <div bind:this={container} class="w-[90%] aspect-video rounded-3xl bg-zinc-800 mt-24">
-        <video playsinline bind:this={videoPlayer} controls class="rounded-3xl h-[100%]">
-          <source src={station.uri} />
-          <track kind="captions" />
-        </video>
+      <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
+        <Player src={station.uri} />
       </div>
       <div
-        class="flex w-full items-start justify-between px-20 mt-10 self-start"
+        class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
       >
-        <div class="flex gap-5">
+        <div class="flex gap-5 md:flex-row flex-col">
           <img
             class="rounded-full w-24 h-24"
             src={station.avatar}
@@ -71,7 +63,9 @@
             </p>
           </div>
         </div>
-        <button class="bg-primary-400 shrink-0 rounded-3xl px-5 py-3 font-bold">
+        <button
+          class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+        >
           Subscribe ${station.monthly_fee}
         </button>
       </div>
@@ -81,7 +75,7 @@
 
 <style>
   .cover {
-    @apply absolute top-0 right-0 left-0 -z-10 h-72 object-cover w-full;
+    @apply absolute top-0 right-0 left-0 -z-10 h-72 object-cover w-full rounded-t-3xl;
     -webkit-mask-image: -webkit-gradient(
       linear,
       left top,

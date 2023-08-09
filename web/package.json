@@ -27,6 +27,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "dashjs": "^4.7.1"
+    "dashjs": "^4.7.1",
+    "plyr": "^3.7.8"
   }
 }

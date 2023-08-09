@@ -1,13 +1,13 @@
 <script>
-  import { goto, url } from "@roxi/routify";
-  import { quintOut } from "svelte/easing";
-  import { fly } from "svelte/transition";
-  import Logo from "./Logo.svelte";
-  import { userStore } from "@/stores";
+  import { goto, url } from '@roxi/routify';
+  import { quintOut } from 'svelte/easing';
+  import { fly } from 'svelte/transition';
+  import Logo from './Logo.svelte';
+  import { userStore } from '@/stores';
 
   const onLogout = () => {
     userStore.setUser(undefined);
-    $goto("/login");
+    $goto('/login');
   };
 </script>
 
@@ -18,15 +18,15 @@
     opacity: 0.5,
     easing: quintOut,
   }}
-  class="w-full z-50 flex justify-between items-center py-3 sticky bg-zinc-950 shadow-lg top-0 px-5 mx-auto"
+  class="w-full z-50 flex justify-between items-center sticky bg-zinc-950 shadow-lg top-0 px-5 mx-auto"
 >
-  <a class="flex items-center gap-2" href={$url("/home")}>
+  <a class="flex items-center gap-2" href={$url('/home')}>
     <Logo class="scale-50" />
     <h1 class="text-xl text-primary-400 font-black">Mjolnir</h1>
   </a>
   <div class="flex items-center gap-2">
     <a
-      href={$url("/stations")}
+      href={$url('/stations')}
       class="sm:px-4 px-3 py-2 font-bold text-xs sm:text-sm rounded-3xl bg-primary-500"
     >
       Your Stations
