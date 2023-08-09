@@ -41,10 +41,6 @@ metadata:
 spec:
   # Merge and Use .Values.ingress.hosts and .Values.ingressWebsocket.hosts
   domains:
-    {{- range .Values.ingress.hosts }}
-    - {{ . | quote }}
-    {{- end }}
-    {{- range .Values.ingressWebsocket.hosts }}
-    - {{ . | quote }}
-    {{- end }}
+    - {{ first .Values.ingress.hosts }}
+    - {{ first .Values.ingressWebsocket.hosts }}
 {{- end }}
