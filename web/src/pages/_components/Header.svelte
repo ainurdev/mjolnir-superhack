@@ -4,7 +4,7 @@
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import Logo from './Logo.svelte';
-  import accounts from '../../store/accounts';
+  import accounts from '../../stores/account';
 
   let isLoggedIn: boolean = false;
 
