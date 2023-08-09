@@ -1,0 +1,12 @@
+resources:
+  requests:
+    cpu: "2"
+    memory: 0.5Gi
+  limits:
+    cpu: "2.5"
+    memory: 1Gi
+
+numberOfInstances: 1
+
+volume:
+  size: 150Gi

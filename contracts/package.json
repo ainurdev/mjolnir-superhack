@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "check": "hardhat check",
+    "console": "hardhat console",
     "build": "hardhat compile",
-    "test": "hardhat test --typecheck"
+    "test": "hardhat test"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",

@@ -1,0 +1,34 @@
+config:
+  ethereum:
+    url: url
+    address: address
+    mnemonic: mnemonic
+  graphNodeEndpoints:
+    admin: http://graphprotocol-node-index:8020/
+    status: http://graphprotocol-node-index:8030/graphql
+    query: http://graphprotocol-node-query:8000/
+
+postgres:
+  db: database
+  host: host
+  user: user
+  password:
+    fromSecret:
+      name: name
+      key: key
+
+service:
+  annotations:
+    test: "test"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - chart-example.local
+  tls:
+    - secretName: chart-example-tls
+      hosts:
+        - chart-example.local

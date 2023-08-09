@@ -1,22 +1,20 @@
 <script lang="ts">
-  import { goto } from "@roxi/routify";
-  import { onMount } from "svelte";
-  import { quintOut } from "svelte/easing";
-  import { fly } from "svelte/transition";
-  import MetamaskIcon from "@/icons/Metamask.svelte";
-  import { userStore } from "@/stores";
+  import { goto } from '@roxi/routify';
+  import { onMount } from 'svelte';
 
-  import Logo from "../_components/Logo.svelte";
-    import accounts from "src/store/accounts";
+  import MetamaskIcon from '@/icons/Metamask.svelte';
+  import { accountStore } from '@/stores';
+
+  import Logo from '../_components/Logo.svelte';
 
   let etherumInstalled: boolean = false,
     shouldConnectWallet: boolean = false;
 
   const continueViaMetamask = async () => {
-    let wallets = await window.ethereum.request({ method: "eth_accounts" });
+    let wallets = await window.ethereum.request({ method: 'eth_accounts' });
     if (!wallets || wallets.length === 0) {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      wallets = await window.ethereum.request({ method: "eth_accounts" });
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      wallets = await window.ethereum.request({ method: 'eth_accounts' });
 
       if (!wallets || wallets.length === 0) {
         shouldConnectWallet = true;
@@ -24,35 +22,32 @@
       }
     }
 
-    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
 
     if (wallets && wallets.length > 0 && chainId) {
-      accounts.setWallet(wallets[0]);
-      $goto("/home");
+      accountStore.setWallet(wallets[0]);
+      $goto('/home');
     } else {
-      alert("Please connect your wallet to continue.");
+      alert('Please connect your wallet to continue.');
     }
   };
 
   const requestAccounts = async () => {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
     continueViaMetamask();
   };
 
   onMount(async () => {
     if (window.ethereum) {
       etherumInstalled = true;
-      let wallets = await window.ethereum.request({ method: "eth_accounts" });
+      let wallets = await window.ethereum.request({ method: 'eth_accounts' });
 
       if (
         wallets &&
         wallets.length > 0 &&
-        $userStore.user &&
-        $userStore.user.wallet === wallets[0]
+        $accountStore?.wallet === wallets[0]
       ) {
-        $goto("/home");
-      } else {
-        $goto("/login");
+        $goto('/home');
       }
     }
   });
@@ -61,16 +56,7 @@
 <div
   class="flex items-center justify-center px-5 flex-col relative overflow-hidden w-full h-[100dvh]"
 >
-  <div
-    in:fly={{
-      delay: 500,
-      duration: 300,
-      y: -20,
-      opacity: 0.2,
-      easing: quintOut,
-    }}
-    class="flex flex-col items-center justify-center"
-  >
+  <div class="flex flex-col items-center justify-center">
     <Logo />
     <h1 class="text-4xl text-white font-bold mt-8 text-center">
       Welcome to

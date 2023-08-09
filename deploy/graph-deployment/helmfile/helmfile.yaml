@@ -1,0 +1,79 @@
+helmDefaults:
+  wait: true
+
+environments:
+  standalone:
+    values:
+    - installIpfs: true
+    - installIndexer: false
+    - ipfsEndpoint: "http://ipfs-ipfs:5001/"
+  network:
+    values:
+    - installIpfs: false
+    - installIndexer: true
+    - ipfsEndpoint: "https://ipfs.network.thegraph.com"
+releases:
+- name: postgres
+  chart: ../charts/postgres
+  labels:
+    component: postgres
+  values:
+  - values/postgres.yaml
+
+- name: graphprotocol-node-index
+  chart: ../charts/graphprotocol-node
+  labels:
+    component: node-index
+  values:
+  - values/graphprotocol-node-index.yaml
+  - config:
+      ipfs: {{ .Values.ipfsEndpoint }}
+  needs:
+  - postgres
+
+- name: graphprotocol-node-query
+  chart: ../charts/graphprotocol-node
+  labels:
+    component: node-query
+  values:
+  - values/graphprotocol-node-query.yaml
+  - config:
+      ipfs: {{ .Values.ipfsEndpoint }}
+  needs:
+  - postgres
+
+- name: graphprotocol-indexer-agent
+  chart: ../charts/graphprotocol-indexer-agent
+  labels:
+    component: indexer-agent
+  values:
+  - values/graphprotocol-indexer-agent.yaml
+  needs:
+  - postgres
+  - graphprotocol-node-index
+  - graphprotocol-node-query
+  installed: {{ .Values.installIndexer }}
+
+- name: graphprotocol-indexer-service
+  chart: ../charts/graphprotocol-indexer-service
+  labels:
+    component: indexer-service
+  values:
+  - values/graphprotocol-indexer-service.yaml
+  needs:
+  - postgres
+  - graphprotocol-node-index
+  - graphprotocol-node-query
+  installed: {{ .Values.installIndexer }}
+
+- name: ipfs
+  chart: ../charts/ipfs
+  labels:
+    component: ipfs
+  values:
+  - args:
+    - --migrate=true
+    # Prevent IPFS from connecting to IPFS network
+    # It would prevent your files from sharing with network and would prevent your applications from using external files
+    - --offline
+  installed: {{ .Values.installIpfs }}

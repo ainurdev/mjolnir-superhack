@@ -1,0 +1,46 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "graphprotocol-node.fullname" . }}
+  labels:
+    {{- include "graphprotocol-node.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: {{ first .Values.ingress.hosts }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "graphprotocol-node.fullname" $ }}
+                port:
+                  name: graphql
+    - host: {{ first .Values.ingressWebsocket.hosts }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "graphprotocol-node.fullname" $ }}
+                port:
+                  name: graphql-ws
+{{- end }}
+---
+{{- if .Values.ingressWebsocket.enabled -}}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ include "graphprotocol-node.fullname" . }}-cert
+spec:
+  # Merge and Use .Values.ingress.hosts and .Values.ingressWebsocket.hosts
+  domains:
+    - {{ first .Values.ingress.hosts }}
+    - {{ first .Values.ingressWebsocket.hosts }}
+{{- end }}

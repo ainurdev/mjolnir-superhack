@@ -40,7 +40,7 @@
     opacity: 0.5,
     easing: quintOut,
   }}
-  class="w-full z-50 flex justify-between items-center py-3 sticky bg-zinc-950 shadow-lg top-0 px-5 mx-auto"
+  class="w-full z-50 flex justify-between items-center sticky bg-zinc-950 shadow-lg top-0 px-5 mx-auto"
 >
   <a class="flex items-center gap-2" href={$url('/home')}>
     <Logo class="scale-50" />

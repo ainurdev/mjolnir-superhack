@@ -10,7 +10,7 @@
 </script>
 
 <a
-  href={$url("/station/:uid", { uid: station.uid })}
+  href={$url("/stream/:uid", { uid: station.uid })}
   class="p-5 rounded-3xl bg-zinc-900 flex md:flex-row flex-col"
 >
   <img
