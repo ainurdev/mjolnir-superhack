@@ -57,3 +57,21 @@
 .form .actions .show-help {
   background-color: #1f1f23;
 }
+
+.log {
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background-color: #1f1f23;
+  color: #fafafa;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  max-height: 400px;
+  width: 100%;
+  max-width: 600px;
+  overflow: auto;
+}
+
+.log.hidden {
+  display: none;
+}

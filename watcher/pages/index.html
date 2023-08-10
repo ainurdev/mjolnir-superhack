@@ -15,12 +15,11 @@
 
         <div class="form-container">
           <form class="form">
-            <p class="result error">There was an error</p>
+            <p class="result hidden"></p>
             <div class="input-group">
               <label for="file">Select OBS recording directory</label>
               <div class="input-file">
                 <div class="input-file__text">Select directory</div>
-                <input type="file" id="file" name="file" webkitdirectory directory multiple>
               </div>
             </div>
             <div class="actions">
@@ -50,6 +49,10 @@
               <li>Click the Upload button</li>
             </ol>
           </div>
+        </div>
+
+        <div class="form-container">
+          <div class="log hidden"></div>
         </div>
       </div>
     </div>

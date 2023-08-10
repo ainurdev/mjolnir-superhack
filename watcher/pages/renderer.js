@@ -1,50 +1,58 @@
-const watchFileInput = () => {
-  const fileInput = document.querySelector('.input-file input')
-  const fileLabel = document.querySelector('.input-file__text')
+const data = {
+  selectedDir: null,
+  streaming: false
+}
 
-  fileInput.addEventListener('change', (e) => {
-    // show selected directory
-    const path = e.target.value.split('\\')
-    fileLabel.innerHTML = path[path.length - 1]
+const watchFileInput = () => {
+  const fileInput = document.querySelector('.input-file')
+  const fileLabel = fileInput.querySelector('.input-file__text')
+
+  fileInput.addEventListener('click', () => {
+    window.mapi.selectFolder().then((path) => {
+      if (!path) {
+        return
+      }
+
+      fileLabel.innerHTML = path
+      data.selectedDir = path
+    })
   })
 }
 
 const watchForm = () => {
   const form = document.querySelector('form')
   const submitButton = form.querySelector('input[type=submit]')
-  const fileInput = form.querySelector('.input-file input')
-  const fileLabel = form.querySelector('.input-file__text')
   const result = document.querySelector('.result')
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()
+    if (data.streaming) {
+      return
+    }
 
     submitButton.disabled = true
-    submitButton.innerHTML = 'Uploading...'
+    submitButton.innerHTML = 'Starting Stream...'
     result.classList.remove('error')
+    result.classList.add('hidden')
 
-    const formData = new FormData()
-    formData.append('file', fileInput.files[0])
-
-    fetch('/upload', {
-      method: 'POST',
-      body: formData
-    })
-      .then((res) => res.json())
+    window.mapi.startUpload(data.selectedDir)
       .then((res) => {
+        if (res && res.error) {
+          throw res.error
+        }
+
+        data.streaming = true
         submitButton.disabled = false
-        submitButton.innerHTML = 'Upload'
-        fileInput.value = ''
-        fileLabel.innerHTML = 'Select directory'
-        result.innerHTML = res.message
+        submitButton.innerHTML = 'Streaming'
+        result.classList.remove('hidden')
+        result.innerHTML = "We are watching the selected directory for segments and streaming them."
       })
       .catch((err) => {
         submitButton.disabled = false
         submitButton.innerHTML = 'Upload'
-        fileInput.value = ''
-        fileLabel.innerHTML = 'Select directory'
         result.classList.add('error')
-        result.innerHTML = err.message
+        result.classList.remove('hidden')
+        result.innerHTML = err && err || "Something went wrong, try again in a few seconds."
       })
   })
 }
@@ -58,8 +66,17 @@ const activateHelpButton = () => {
   })
 }
 
+const logUploadMessage = () => {
+  window.mapi.onUploadMessage(({message, ...rest}) => {
+    const log = document.querySelector('.log')
+    log.classList.remove('hidden')
+    log.innerHTML += `<p>${new Date().toString()} ${message} ${rest ? JSON.stringify(rest) : rest}</p>`
+  })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   watchFileInput()
   watchForm()
   activateHelpButton()
+  logUploadMessage()
 })

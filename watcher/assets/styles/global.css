@@ -58,20 +58,6 @@ body {
   font-weight: bold;
 }
 
-.input-file {
-  position: relative;
-}
-
-.input-file input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
 .input-file__text {
   display: flex;
   align-items: center;
@@ -106,6 +92,10 @@ body {
   color: #fafafa;
   margin-top: 1rem;
   font-size: 0.8rem;
+}
+
+.form .result.hidden {
+  display: none;
 }
 
 .form .result.error {
