@@ -1,0 +1,37 @@
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0 2rem 0;
+  text-align: center;
+}
+
+.help {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.help p {
+  margin: 0 0 1rem;
+}
+
+.help ol {
+  margin: 0;
+}
+
+.help ol ol {
+  margin-bottom: 0.5rem;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.form {
+  width: 100%;
+  max-width: 600px;
+}
