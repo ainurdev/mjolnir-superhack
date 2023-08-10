@@ -108,3 +108,9 @@ ingressWebsocket:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+indexIngress:
+  enabled: false
+  hosts:
+  annotations: {}
+  ipfs: {}

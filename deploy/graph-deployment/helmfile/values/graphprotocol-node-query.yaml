@@ -56,3 +56,15 @@ ingressWebsocket:
     kubernetes.io/ingress.global-static-ip-name: mjolnir-superhack-ip
     networking.gke.io/managed-certificates: graphprotocol-node-query-cert
     kubernetes.io/ingress.class: "gce"
+
+indexIngress:
+  enabled: false
+  hosts:
+  - graph-index.ainur.dev
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: graph-rpc-ip
+    networking.gke.io/managed-certificates: graphprotocol-node-index-cert
+    kubernetes.io/ingress.class: "gce"
+  ipfs:
+    hosts:
+    - ipfs.ainur.dev
