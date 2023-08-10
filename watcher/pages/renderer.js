@@ -70,7 +70,7 @@ const logUploadMessage = () => {
   window.mapi.onUploadMessage(({message, ...rest}) => {
     const log = document.querySelector('.log')
     log.classList.remove('hidden')
-    log.innerHTML += `<p>${message} ${rest ? JSON.stringify(rest) : rest}</p>`
+    log.innerHTML += `<p>${new Date().toString()} ${message} ${rest ? JSON.stringify(rest) : rest}</p>`
   })
 }
 
