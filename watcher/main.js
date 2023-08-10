@@ -10,6 +10,12 @@ const data = {
   ipns: null
 }
 
+const uploadPlaylist = async (dir, filename) => {
+  const bytes = fs.readFileSync(path.join(dir, filename))
+  const cid = await data.unixfs.addBytes(bytes)
+  return cid
+}
+
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -107,6 +113,13 @@ const createWindow = () => {
 
         fs.writeFileSync(path.join(dir, playlistFilename), playlistFile)
         mainWindow.webContents.send("upload:message", { message: "updated playlist file", playlistFile })
+
+        const cid = await uploadPlaylist(dir, playlistFilename)
+        mainWindow.webContents.send("upload:message", { message: "uploaded playlist file", playlistFile: cid.toString() })
+        const tb = await import('it-to-buffer')
+        const newFilename = "./sample.m3u8"
+        const d = await tb.default(await data.unixfs.cat(cid.toString()))
+        fs.writeFileSync(newFilename, d)
       }
     }
 
@@ -137,6 +150,9 @@ const createWindow = () => {
 
           fs.writeFileSync(path.join(dir, playlistFilename), playlistFile)
           mainWindow.webContents.send("upload:message", { message: "updated playlist file", playlistFile })
+
+          const cid = await uploadPlaylist(dir, playlistFilename)
+          mainWindow.webContents.send("upload:message", { message: "uploaded playlist file", playlistFile: cid.toString() })
         }
         return
       }
@@ -158,9 +174,10 @@ const createWindow = () => {
       fs.writeFileSync(path.join(dir, playlistFilename), playlistFile)
       mainWindow.webContents.send("upload:message", { message: "updated playlist file", playlistFile })
     })
+
   })
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && process.env.DISABLE_DEVTOOLS.toLowerCase() !== 'true') {
     mainWindow.webContents.openDevTools()
   }
 }

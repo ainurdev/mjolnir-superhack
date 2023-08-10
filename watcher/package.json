@@ -10,6 +10,7 @@
   "dependencies": {
     "@helia/ipns": "^1.1.3",
     "@helia/unixfs": "^1.4.1",
-    "helia": "^1.3.12"
+    "helia": "^1.3.12",
+    "it-to-buffer": "^4.0.2"
   }
 }
