@@ -1,18 +1,53 @@
 <script lang="ts">
-  import ImgUpload from "./ImgUpload.svelte";
-  import type { Station } from "@/types";
+  import { NFTStorage, type CIDString } from 'nft.storage';
+  import ImgUpload from './ImgUpload.svelte';
+  import type { Station, StationMetadata } from '@/types';
 
-  export let state: "create" | "edit" = "create";
+  export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
-    name: "",
-    cover: "",
-    avatar: "",
-    description: "",
+    name: '',
+    cover: '',
+    avatar: '',
+    description: '',
     monthly_fee: 0,
+  };
+
+  const NFT_Storage_KEY = import.meta.env.VITE_NFT_STORAGE_API_KEY;
+  const client = new NFTStorage({ token: NFT_Storage_KEY });
+
+  const submitStation = async () => {
+    const { name, cover, avatar, description, monthly_fee } = station;
+    const stationMetadata: StationMetadata = {
+      name,
+      description,
+      image: await getImgBlob(cover),
+      properties: {
+        avatar: await getImgBlob(avatar),
+        monthly_fee,
+      },
+    };
+
+    const metadata = await client.store(stationMetadata);
+    console.table(metadata);
+
+    await getStatus(metadata.ipnft);
+  };
+
+  const getImgBlob = async (img: string): Promise<Blob> => {
+    return await fetch(img).then(r => r.blob());
+  };
+
+  const getStatus = async (cid: CIDString) => {
+    const status = await client.status(cid);
+    console.log('Status: ', status);
   };
 </script>
 
-<form class="flex flex-col gap-5 mt-5" id="station">
+<form
+  on:submit|preventDefault={submitStation}
+  class="flex flex-col gap-5 mt-5"
+  id="station"
+>
   <ImgUpload bind:uploaded={station.cover} type="cover" />
   <div class="flex sm:flex-row flex-col gap-2">
     <ImgUpload
