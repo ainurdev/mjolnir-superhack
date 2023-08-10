@@ -86,7 +86,6 @@ body {
 .form .actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
 }
 
 .form .actions button, .form .actions input[type="submit"] {
@@ -98,4 +97,21 @@ body {
   font-size: 0.875rem;
   font-weight: bold;
   border-radius: 1.5rem;
+}
+
+.form .result {
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background-color: #1f1f23;
+  color: #fafafa;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.form .result.error {
+  background-color: #ef4444;
+}
+
+button:active, button:focus, input:active, input:focus {
+  outline: none;
 }
