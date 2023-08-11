@@ -27,7 +27,9 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@urql/svelte": "^4.0.4",
     "dashjs": "^4.7.1",
+    "graphql": "^16.7.1",
     "plyr": "^3.7.8"
   }
 }
