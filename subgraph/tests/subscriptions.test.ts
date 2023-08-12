@@ -8,13 +8,13 @@ import {
 } from 'matchstick-as/assembly/index';
 
 import {
+  handleSubscriptionCreated,
+  handleTransfer,
+} from '../src/nft-subscriptions';
+import {
   handleStationCreated,
   handleTransfer as handleStationTransfer,
 } from '../src/stations';
-import {
-  handleSubscriptionCreated,
-  handleTransfer,
-} from '../src/subscriptions';
 
 import {
   createStationCreatedEvent,
@@ -76,15 +76,15 @@ describe('Subscription', () => {
     );
     handleSubscriptionCreated(subscriptionCreatedEvent);
 
-    assert.entityCount('Subscription', 1);
+    assert.entityCount('NFTSubscription', 1);
     assert.fieldEquals(
-      'Subscription',
+      'NFTSubscription',
       subscriptionId.toString(),
       'station',
       stationId.toString(),
     );
     assert.fieldEquals(
-      'Subscription',
+      'NFTSubscription',
       subscriptionId.toString(),
       'owner',
       '0x0000000000000000000000000000000000000000',
@@ -114,15 +114,15 @@ describe('Subscription', () => {
     );
     handleTransfer(transferEvent);
 
-    assert.entityCount('Subscription', 1);
+    assert.entityCount('NFTSubscription', 1);
     assert.fieldEquals(
-      'Subscription',
+      'NFTSubscription',
       subscriptionId.toString(),
       'station',
       stationId.toString(),
     );
     assert.fieldEquals(
-      'Subscription',
+      'NFTSubscription',
       subscriptionId.toString(),
       'owner',
       subscriberAddress.toHexString(),

@@ -12,7 +12,7 @@ type Station @entity(immutable: true) {
   stream: Stream
 }
 
-type Subscription @entity(immutable: true) {
+type NFTSubscription @entity(immutable: true) {
   id: String!
   station: Station!
   owner: Bytes!

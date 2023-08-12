@@ -53,4 +53,4 @@ dataSources:
           handler: handleSubscriptionCreated
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/subscriptions.ts
+      file: ./src/nft-subscriptions.ts
