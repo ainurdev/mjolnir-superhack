@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Mjolnir Superhack Watcher</title>
+    <link rel="stylesheet" href="../assets/styles/global.css" content="default-src 'none'">
+    <link rel="stylesheet" href="style.css" content="default-src 'none'">
+    <script src="./renderer.js" defer></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="container">
+        <h1 class="title">Mjolnir Superhack</h1>
+
+        <div class="form-container">
+          <form class="form">
+            <p class="result error">There was an error</p>
+            <div class="input-group">
+              <label for="file">Select OBS recording directory</label>
+              <div class="input-file">
+                <div class="input-file__text">Select directory</div>
+                <input type="file" id="file" name="file" webkitdirectory directory multiple>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="show-help" id="help-button" type="reset">Help &#8964;</button>
+              <input type="submit" value="Upload">
+            </div>
+          </form>
+        </div>
+
+        <div class="help-container hidden">
+          <div class="help">
+            <p>To start streaming on Mjolnir, follow these steps:</p>
+            <ol>
+              <li>Install OBS</li>
+              <ol>
+                <li>Start OBS</li>
+                <li>Go to "Settings" > "Output"</li>
+                <li>Change "Output Mode" to "Advanced"</li>
+                <li>Go to the "Recording" tab</li>
+                <li>Change "Type" to "Custom Output (FFmpeg)"</li>
+                <li>Change "Container Format" to "hls"</li>
+                <li>Select an empty directory for "File path or URL", <b>Remember this directory</b></li>
+                <li>Click "OK" to save and exit settings</li>
+              </ol>
+              <li>Start recording your screen</li>
+              <li>Select the recording directory you chose in step 1.7</li>
+              <li>Click the Upload button</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
 
   import MetamaskIcon from '@/icons/Metamask.svelte';
-  import { userStore } from '@/stores';
+  import { accountStore } from '@/stores';
 
   import Logo from '../_components/Logo.svelte';
 
@@ -25,10 +25,7 @@
     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
 
     if (wallets && wallets.length > 0 && chainId) {
-      userStore.setUser({
-        wallet: wallets[0],
-        chainId: chainId,
-      });
+      accountStore.setWallet(wallets[0]);
       $goto('/home');
     } else {
       alert('Please connect your wallet to continue.');
@@ -48,12 +45,9 @@
       if (
         wallets &&
         wallets.length > 0 &&
-        $userStore.user &&
-        $userStore.user.wallet === wallets[0]
+        $accountStore?.wallet === wallets[0]
       ) {
         $goto('/home');
-      } else {
-        $goto('/login');
       }
     }
   });

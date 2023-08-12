@@ -14,4 +14,4 @@ export const DEFAULT_STATION: Station = {
   last_stream: '2 hours ago',
 };
 
-export const KEY = 'mjolnirtv';
+export const LOCALSTORAGE_KEY = "mjolnir-superhack-";

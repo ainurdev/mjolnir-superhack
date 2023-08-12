@@ -7,13 +7,8 @@ config:
   chains:
     mainnet:
       providers:
-      - label: mainnet
-        url: https://eth.llamarpc.com
-        features: [ archive ]
-    rinkeby:
-      providers:
-      - label: opmainnnet
-        url: https://optimism.meowrpc.com	
+      - label: goerli
+        url: https://rpc.notadegen.com/goerli
         features: [ archive ]
 
 postgres:
@@ -39,3 +34,15 @@ role: "index-node"
 
 monitoring:
   enabled: true
+
+indexIngress:
+  enabled: true
+  hosts:
+  - graph-index.ainur.dev
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: graph-rpc-ip
+    networking.gke.io/managed-certificates: graphprotocol-node-index-cert
+    kubernetes.io/ingress.class: "gce"
+  ipfs:
+    hosts:
+    - ipfs.ainur.dev

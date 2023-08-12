@@ -10,6 +10,16 @@ export type Station = {
   uri?: string;
 };
 
+export type StationMetadata = {
+  name: string;
+  description: string;
+  image: Blob | File;
+  properties: {
+    avatar: Blob | File;
+    monthly_fee: number;
+  };
+};
+
 export type User = {
   wallet: string;
   chainId: string;
