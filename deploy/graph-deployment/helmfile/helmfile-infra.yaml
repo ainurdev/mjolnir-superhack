@@ -12,6 +12,8 @@ repositories:
   url: https://prometheus-community.github.io/helm-charts
 - name: postgres-operator
   url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator
+- name: caddyserver
+  url: https://caddyserver.github.io/ingress/
 
 environments:
   default:
@@ -33,6 +35,16 @@ releases:
   - configKubernetes:
       enable_pod_antiaffinity: true
   installed: {{ .Values.postgresOperator.enabled }}
+
+- name: caddy-ingress-controller
+  chart: caddyserver/caddy-ingress-controller
+  atomic: true
+  values:
+  - ingressController:
+      config:
+        onDemandTLS: true
+        email: "{{ .Values.email }}"
+  installed: {{ .Values.caddy.enabled }}
 
 - name: cert-manager
   chart: jetstack/cert-manager

@@ -5,21 +5,23 @@ postgresDatasource:
   url: postgres-postgres.graph:5432 # Postgres host, format postgres-postgres.<graph-node namespace>:5432
   user: node
   db: node
-  password: obiY9jyLpRmlW5AxH7Qo9X2rObXqbaYSsBdE5I8HrZSjjQxVffZgSpe7uec7N3CX
+  password: PjxFqltEYEU4IC6lqfCEBbt9UXKY2Ew4ilaUyk5waC6tGFn2i8WoQhfebJalzlaG
 
 # Enables infra components
 ingressNginx:
+  enabled: false
+caddy:
   enabled: true
 postgresOperator:
   enabled: true
 certManager:
-  enabled: true
+  enabled: false
 letsencryptProdIssuer:
-  enabled: true
+  enabled: false
 kubernetesDashboard:
-  enabled: true
+  enabled: false
 kubernetesDashboardSA:
-  enabled: true
+  enabled: false
 prometheusStack:
   enabled: true
 graphGrafanaDashboards:
