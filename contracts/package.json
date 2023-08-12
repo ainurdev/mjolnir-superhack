@@ -6,7 +6,7 @@
     "console": "hardhat console",
     "build": "hardhat compile",
     "test": "hardhat test",
-    "deploy": "npx hardhat run scripts/deploy.ts"
+    "deploy": "hardhat run scripts/deploy.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",

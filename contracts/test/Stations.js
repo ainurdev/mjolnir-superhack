@@ -69,7 +69,12 @@ describe('Stations', function () {
       const { stations, owner1 } = await loadFixture(deployFixture);
       const fee = BigInt(1e18);
       const cid = 'test cid';
-      const tx = await stations.createStation(fee, cid, owner1, new Uint8Array());
+      const tx = await stations.createStation(
+        fee,
+        cid,
+        owner1,
+        new Uint8Array(),
+      );
       const receipt = await tx.wait();
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
@@ -84,7 +89,12 @@ describe('Stations', function () {
       const { stations, owner1 } = await loadFixture(deployFixture);
       const fee = BigInt(1e18);
       const cid = 'test cid';
-      const tx = await stations.createStation(fee, cid, owner1, new Uint8Array());
+      const tx = await stations.createStation(
+        fee,
+        cid,
+        owner1,
+        new Uint8Array(),
+      );
       const receipt = await tx.wait();
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
@@ -99,7 +109,12 @@ describe('Stations', function () {
       const { stations, owner1 } = await loadFixture(deployFixture);
       const fee = BigInt(1e18);
       const cid = 'test cid';
-      const tx = await stations.createStation(fee, cid, owner1, new Uint8Array());
+      const tx = await stations.createStation(
+        fee,
+        cid,
+        owner1,
+        new Uint8Array(),
+      );
       const receipt = await tx.wait();
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
@@ -127,7 +142,9 @@ describe('Stations', function () {
         deployWithStationFixture,
       );
       const newCid = 'new test cid';
-      await expect(stations.connect(owner1).updateStationCid(stationId1, newCid))
+      await expect(
+        stations.connect(owner1).updateStationCid(stationId1, newCid),
+      )
         .to.emit(stations, 'StationCidUpdated')
         .withArgs(stationId1, newCid);
     });
@@ -149,7 +166,9 @@ describe('Stations', function () {
         deployWithStationFixture,
       );
       const newFee = BigInt(2e18);
-      await expect(stations.connect(owner1).updateStationFee(stationId1, newFee))
+      await expect(
+        stations.connect(owner1).updateStationFee(stationId1, newFee),
+      )
         .to.emit(stations, 'StationFeeUpdated')
         .withArgs(stationId1, newFee);
     });

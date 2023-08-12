@@ -1,0 +1,19 @@
+type Stream @entity(immutable: true) {
+  id: String!
+  isPrivate: Boolean!
+  cid: String!
+}
+
+type Station @entity(immutable: true) {
+  id: String!
+  owner: Bytes!
+  cid: String!
+  monthlyFee: BigInt!
+  stream: Stream
+}
+
+type Subscription @entity(immutable: true) {
+  id: String!
+  station: Station!
+  owner: Bytes!
+}

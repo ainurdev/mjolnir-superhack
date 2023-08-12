@@ -21,6 +21,7 @@
   },
   "workspaces": [
     "web",
-    "contracts"
+    "contracts",
+    "subgraph"
   ]
 }

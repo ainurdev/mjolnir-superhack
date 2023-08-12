@@ -4,16 +4,13 @@ import { ethers } from 'hardhat';
 import { HardhatUserConfig } from 'hardhat/config';
 
 const privateKey = process.env.PRIVATE_KEY;
-if (privateKey === undefined) {
-  throw Error('PRIVATE_KEY env is not set');
-}
-
+const accounts = privateKey !== undefined ? [privateKey] : [];
 const config: HardhatUserConfig = {
   solidity: '0.8.19',
   networks: {
     goerli: {
       url: 'https://ethereum-goerli.publicnode.com',
-      accounts: [privateKey],
+      accounts: accounts,
     },
   },
 };

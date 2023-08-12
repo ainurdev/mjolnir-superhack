@@ -1,0 +1,12 @@
+{
+  "goerli": {
+    "Stations": {
+      "address": "0xA78Ad8Ec725C50D6FFF8c9B43Ded2CD93C5f9e75",
+      "startBlock": 9490409
+    },
+    "Subscriptions": {
+      "address": "0x9BC147caE0f2255c9cb86977b1A985f5Bac3f98a",
+      "startBlock": 9490409
+    }
+  }
+}

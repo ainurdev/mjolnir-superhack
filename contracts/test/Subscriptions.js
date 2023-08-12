@@ -19,9 +19,14 @@ describe('Subscriptions', function () {
     const [, owner1, user1] = await ethers.getSigners();
 
     const createStation = async owner => {
-    const fee = BigInt(1e18);
+      const fee = BigInt(1e18);
       const cid = 'test cid';
-      const tx = await stations.createStation(fee, cid, owner, new Uint8Array());
+      const tx = await stations.createStation(
+        fee,
+        cid,
+        owner,
+        new Uint8Array(),
+      );
       const receipt = await tx.wait();
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
