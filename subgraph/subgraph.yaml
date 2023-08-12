@@ -21,7 +21,6 @@ dataSources:
         - name: Stations
           file: ./abis/Stations.json
       eventHandlers:
-        - event: StationCreated(uint256,uint256,string)
           handler: handleStationCreated
         - event: StationFeeUpdated(uint256,uint256)
           handler: handleStationFeeUpdated
@@ -31,6 +30,9 @@ dataSources:
           handler: handlePublicStreamPublished
         - event: PrivateStreamPublished(uint256,string)
           handler: handlePrivateStreamPublished
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: StationCreated(uint256,uint256,string)
       file: ./src/stations.ts
   - kind: ethereum
     name: Subscriptions
@@ -51,4 +53,6 @@ dataSources:
       eventHandlers:
         - event: SubscriptionCreated(uint256,uint256)
           handler: handleSubscriptionCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
       file: ./src/nft-subscriptions.ts
