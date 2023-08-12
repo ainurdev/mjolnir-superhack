@@ -30,6 +30,7 @@
     "@urql/svelte": "^4.0.4",
     "dashjs": "^4.7.1",
     "graphql": "^16.7.1",
+    "nft.storage": "^7.1.1",
     "plyr": "^3.7.8"
   }
 }
