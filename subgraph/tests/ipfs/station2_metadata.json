@@ -1,0 +1,8 @@
+{
+  "name": "random station 2 name",
+  "description": "random station 2 description",
+  "image": "ipfs://randomimage2",
+  "properties": {
+    "cover": "ipfs://randomcover2"
+  }
+}

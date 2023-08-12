@@ -2,8 +2,10 @@ import { Address, BigInt } from '@graphprotocol/graph-ts';
 import {
   afterEach,
   assert,
+  beforeAll,
   clearStore,
   describe,
+  mockIpfsFile,
   test,
 } from 'matchstick-as/assembly/index';
 
@@ -19,45 +21,19 @@ import {
 import {
   createPrivateStreamPublishedEvent,
   createPublicStreamPublishedEvent,
+  createStation,
   createStationCidUpdatedEvent,
   createStationCreatedEvent,
   createStationFeeUpdatedEvent,
   createTransferEvent,
 } from './stations-utils';
 
-class createStationResult {
-  constructor(
-    public stationId: BigInt,
-    public owner: string,
-    public monthlyFee: BigInt,
-    public cid: string,
-  ) {}
-}
-
-function createStation(): createStationResult {
-  const stationId = BigInt.fromI32(123);
-  const monthlyFee = BigInt.fromI32(10);
-  const cid = 'test cid';
-  const stationCreatedEvent = createStationCreatedEvent(
-    stationId,
-    monthlyFee,
-    cid,
-  );
-  const zeroAddress = '0x0000000000000000000000000000000000000000';
-  const owner = '0x0000000000000000000000000000000000000001';
-  const transferEvent = createTransferEvent(
-    Address.fromString(zeroAddress),
-    Address.fromString(owner),
-    stationId,
-  );
-
-  handleStationCreated(stationCreatedEvent);
-  handleTransfer(transferEvent);
-
-  return new createStationResult(stationId, owner, monthlyFee, cid);
-}
-
 describe('Station', function () {
+  beforeAll(function () {
+    mockIpfsFile('station1_metadata', 'tests/ipfs/station1_metadata.json');
+    mockIpfsFile('station2_metadata', 'tests/ipfs/station2_metadata.json');
+  });
+
   afterEach(function () {
     clearStore();
   });
@@ -65,7 +41,7 @@ describe('Station', function () {
   test('handleStationCreated', function () {
     const stationId = BigInt.fromI32(123);
     const monthlyFee = BigInt.fromI32(10);
-    const cid = 'test cid';
+    const cid = 'station1_metadata';
     const stationCreatedEvent = createStationCreatedEvent(
       stationId,
       monthlyFee,
@@ -80,21 +56,48 @@ describe('Station', function () {
       'owner',
       '0x0000000000000000000000000000000000000000',
     );
-    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'name',
+      'random station 1 name',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      'random station 1 description',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'image',
+      'ipfs://randomimage1',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'cover',
+      'ipfs://randomcover1',
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'false',
+    );
   });
 
   test('handleStationFeeUpdated', function () {
     const result = createStation();
     const stationId = result.stationId;
-    const owner = result.owner;
-    const cid = result.cid;
     const monthlyFee = result.monthlyFee;
     const newMonthlyFee = monthlyFee.times(BigInt.fromI32(2));
     const stationFeeUpdatedEvent = createStationFeeUpdatedEvent(
@@ -103,102 +106,162 @@ describe('Station', function () {
     );
     handleStationFeeUpdated(stationFeeUpdatedEvent);
 
-    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
-    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
+    assert.entityCount('Station', 1);
+    assert.fieldEquals('Station', stationId.toString(), 'owner', result.owner);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       newMonthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', 'null');
+    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      result.description,
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
+    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'false',
+    );
   });
 
   test('handleStationCidUpdated', function () {
     const result = createStation();
     const stationId = result.stationId;
-    const owner = result.owner;
-    const cid = result.cid;
     const monthlyFee = result.monthlyFee;
-    const newCid = 'new ' + cid;
+    const newCid = 'station2_metadata';
     const stationCidUpdatedEvent = createStationCidUpdatedEvent(
       stationId,
       newCid,
     );
     handleStationCidUpdated(stationCidUpdatedEvent);
 
-    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
-    assert.fieldEquals('Station', stationId.toString(), 'cid', newCid);
+    assert.entityCount('Station', 1);
+    assert.fieldEquals('Station', stationId.toString(), 'owner', result.owner);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'name',
+      'random station 2 name',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      'random station 2 description',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'image',
+      'ipfs://randomimage2',
+    );
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'cover',
+      'ipfs://randomcover2',
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'false',
+    );
   });
 
   test('handlePublicStreamPublished', function () {
     const result = createStation();
     const stationId = result.stationId;
-    const owner = result.owner;
-    const cid = result.cid;
     const monthlyFee = result.monthlyFee;
     const streamCid = 'test stream';
-    const streamId = `public-${streamCid}`;
     const publicStreamPublishedEvent = createPublicStreamPublishedEvent(
       stationId,
       streamCid,
     );
     handlePublicStreamPublished(publicStreamPublishedEvent);
 
-    assert.entityCount('Stream', 1);
-    assert.fieldEquals('Stream', streamId, 'cid', streamCid);
-    assert.fieldEquals('Stream', streamId, 'isPrivate', 'false');
-    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
-    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
+    assert.entityCount('Station', 1);
+    assert.fieldEquals('Station', stationId.toString(), 'owner', result.owner);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', streamId);
+    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      result.description,
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
+    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', streamCid);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'false',
+    );
   });
 
   test('handlePrivateStreamPublished', function () {
     const result = createStation();
     const stationId = result.stationId;
-    const owner = result.owner;
-    const cid = result.cid;
     const monthlyFee = result.monthlyFee;
     const streamCid = 'test stream';
-    const streamId = `private-${streamCid}`;
     const privateStreamPublishedEvent = createPrivateStreamPublishedEvent(
       stationId,
       streamCid,
     );
     handlePrivateStreamPublished(privateStreamPublishedEvent);
 
-    assert.entityCount('Stream', 1);
-    assert.fieldEquals('Stream', streamId, 'cid', streamCid);
-    assert.fieldEquals('Stream', streamId, 'isPrivate', 'true');
-    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
-    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
+    assert.entityCount('Station', 1);
+    assert.fieldEquals('Station', stationId.toString(), 'owner', result.owner);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', streamId);
+    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      result.description,
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
+    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', streamCid);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'true',
+    );
   });
 
   test('handleTransfer', function () {
     const result = createStation();
     const stationId = result.stationId;
     const owner = result.owner;
-    const cid = result.cid;
     const monthlyFee = result.monthlyFee;
     const newOwner = '0x0000000000000000000000000000000000000002';
     const transferEvent = createTransferEvent(
@@ -208,14 +271,29 @@ describe('Station', function () {
     );
     handleTransfer(transferEvent);
 
+    assert.entityCount('Station', 1);
     assert.fieldEquals('Station', stationId.toString(), 'owner', newOwner);
-    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',
       stationId.toString(),
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'stream', 'null');
+    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'description',
+      result.description,
+    );
+    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
+    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
+    assert.fieldEquals(
+      'Station',
+      stationId.toString(),
+      'isStreamPrivate',
+      'false',
+    );
   });
 });

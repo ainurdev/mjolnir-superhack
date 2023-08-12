@@ -11,6 +11,54 @@ import {
   StationFeeUpdated,
   Transfer,
 } from '../generated/Stations/Stations';
+import { handleStationCreated, handleTransfer } from '../src/stations';
+
+class createStationResult {
+  constructor(
+    public stationId: BigInt,
+    public owner: string,
+    public monthlyFee: BigInt,
+    public name: string,
+    public description: string,
+    public image: string,
+    public cover: string,
+  ) {}
+}
+
+export function createStation(): createStationResult {
+  const stationId = BigInt.fromI32(123);
+  const monthlyFee = BigInt.fromI32(10);
+  const cid = 'station1_metadata';
+  const name = 'random station 1 name';
+  const description = 'random station 1 description';
+  const image = 'ipfs://randomimage1';
+  const cover = 'ipfs://randomcover1';
+  const stationCreatedEvent = createStationCreatedEvent(
+    stationId,
+    monthlyFee,
+    cid,
+  );
+  const zeroAddress = '0x0000000000000000000000000000000000000000';
+  const owner = '0x0000000000000000000000000000000000000001';
+  const transferEvent = createTransferEvent(
+    Address.fromString(zeroAddress),
+    Address.fromString(owner),
+    stationId,
+  );
+
+  handleStationCreated(stationCreatedEvent);
+  handleTransfer(transferEvent);
+
+  return new createStationResult(
+    stationId,
+    owner,
+    monthlyFee,
+    name,
+    description,
+    image,
+    cover,
+  );
+}
 
 export function createApprovalEvent(
   owner: Address,
