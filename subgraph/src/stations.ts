@@ -12,9 +12,7 @@ import { Station, Stream } from '../generated/schema';
 
 export function handleStationCreated(event: StationCreatedEvent): void {
   const station = new Station(event.params.stationId.toString());
-  station.owner = Address.fromString(
-    '0x0000000000000000000000000000000000000000',
-  );
+  station.owner = '0x0000000000000000000000000000000000000000';
   station.monthlyFee = event.params.monthlyFee;
   station.cid = event.params.cid;
   station.stream = null;
@@ -91,6 +89,6 @@ export function handleTransfer(event: TransferEvent): void {
   if (station === null) {
     throw new Error(`stationId for handleTransfer is invalid: ${stationId}`);
   }
-  station.owner = event.params.to;
+  station.owner = event.params.to.toHexString();
   station.save();
 }

@@ -28,7 +28,7 @@ import {
 class createStationResult {
   constructor(
     public stationId: BigInt,
-    public owner: Address,
+    public owner: string,
     public monthlyFee: BigInt,
     public cid: string,
   ) {}
@@ -43,13 +43,13 @@ function createStation(): createStationResult {
     monthlyFee,
     cid,
   );
-  const zeroAddress = Address.fromString(
-    '0x0000000000000000000000000000000000000000',
+  const zeroAddress = '0x0000000000000000000000000000000000000000';
+  const owner = '0x0000000000000000000000000000000000000001';
+  const transferEvent = createTransferEvent(
+    Address.fromString(zeroAddress),
+    Address.fromString(owner),
+    stationId,
   );
-  const owner = Address.fromString(
-    '0x0000000000000000000000000000000000000001',
-  );
-  const transferEvent = createTransferEvent(zeroAddress, owner, stationId);
 
   handleStationCreated(stationCreatedEvent);
   handleTransfer(transferEvent);
@@ -103,12 +103,7 @@ describe('Station', function () {
     );
     handleStationFeeUpdated(stationFeeUpdatedEvent);
 
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'owner',
-      owner.toHexString(),
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
     assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',
@@ -132,12 +127,7 @@ describe('Station', function () {
     );
     handleStationCidUpdated(stationCidUpdatedEvent);
 
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'owner',
-      owner.toHexString(),
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
     assert.fieldEquals('Station', stationId.toString(), 'cid', newCid);
     assert.fieldEquals(
       'Station',
@@ -165,12 +155,7 @@ describe('Station', function () {
     assert.entityCount('Stream', 1);
     assert.fieldEquals('Stream', streamId, 'cid', streamCid);
     assert.fieldEquals('Stream', streamId, 'isPrivate', 'false');
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'owner',
-      owner.toHexString(),
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
     assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',
@@ -198,12 +183,7 @@ describe('Station', function () {
     assert.entityCount('Stream', 1);
     assert.fieldEquals('Stream', streamId, 'cid', streamCid);
     assert.fieldEquals('Stream', streamId, 'isPrivate', 'true');
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'owner',
-      owner.toHexString(),
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'owner', owner);
     assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',
@@ -220,18 +200,15 @@ describe('Station', function () {
     const owner = result.owner;
     const cid = result.cid;
     const monthlyFee = result.monthlyFee;
-    const newOwner = Address.fromString(
-      '0x0000000000000000000000000000000000000002',
+    const newOwner = '0x0000000000000000000000000000000000000002';
+    const transferEvent = createTransferEvent(
+      Address.fromString(owner),
+      Address.fromString(newOwner),
+      stationId,
     );
-    const transferEvent = createTransferEvent(owner, newOwner, stationId);
     handleTransfer(transferEvent);
 
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'owner',
-      newOwner.toHexString(),
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'owner', newOwner);
     assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals(
       'Station',

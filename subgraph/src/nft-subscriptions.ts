@@ -13,9 +13,7 @@ export function handleSubscriptionCreated(
     event.params.subscriptionId.toString(),
   );
   subscription.station = event.params.stationId.toString();
-  subscription.owner = Address.fromString(
-    '0x0000000000000000000000000000000000000000',
-  );
+  subscription.owner = '0x0000000000000000000000000000000000000000';
   subscription.save();
 }
 
@@ -27,6 +25,6 @@ export function handleTransfer(event: TransferEvent): void {
       `subscriptionId for handleTransfer is invalid: ${subscriptionId}`,
     );
   }
-  subscription.owner = event.params.to;
+  subscription.owner = event.params.to.toHexString();
   subscription.save();
 }
