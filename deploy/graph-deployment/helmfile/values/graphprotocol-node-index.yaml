@@ -5,7 +5,7 @@ config:
 
   # Configuration of connected blockchain metrics and their providers
   chains:
-    mainnet:
+    goerli:
       providers:
       - label: goerli
         url: https://rpc.notadegen.com/goerli

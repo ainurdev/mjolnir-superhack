@@ -6,7 +6,7 @@
     "test": "graph test",
     "build": "graph build",
     "create": "graph create --node https://graph-index.ainur.dev mjolnir-ethereum-goerli-test",
-    "deploy": "graph deploy --node https://graph-index.ainur.dev mjolnir-ethereum-goerli-test",
+    "deploy": "graph deploy --node https://graph-index.ainur.dev mjolnir-ethereum-goerli-test --ipfs https://ipfs.ainur.dev",
     "remove": "graph remove --node https://graph-index.ainur.dev mjolnir-ethereum-goerli-test"
   },
   "devDependencies": {

@@ -4,10 +4,10 @@ config:
 
   # Configuration of connected blockchain metrics and their providers
   chains:
-    mainnet:
+    goerli:
       providers:
-      - label: mainnet
-        url: https://rpc-athena.ardescan.com
+      - label: goerli
+        url: https://rpc.notadegen.com/goerli
         features: [ archive ]
 
 postgres:
