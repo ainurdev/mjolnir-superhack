@@ -1,7 +1,11 @@
 <script lang="ts">
   import { NFTStorage, type CIDString } from 'nft.storage';
-  import ImgUpload from './ImgUpload.svelte';
+  import { Contract, ethers } from 'ethers';
+  import StationsABI from '@mjolnir/contracts/artifacts/contracts/Stations.sol/Stations.json';
+  import type * as StationsTypes from '@mjolnir/contracts/typechain-types/contracts/Stations';
   import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
+  import ImgUpload from './ImgUpload.svelte';
+  import { accountStore } from '@/stores';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
@@ -14,11 +18,21 @@
     monthlyFee: 0,
   };
 
+  let isProcessing: boolean = false,
+    error: string = '';
+
   const NFT_Storage_KEY = import.meta.env.VITE_NFT_STORAGE_API_KEY;
   const client = new NFTStorage({ token: NFT_Storage_KEY });
 
   const submitStation = async () => {
     const { name, cover, image, description, monthlyFee } = station;
+
+    error = '';
+    if (!name || !cover || !image || !description) {
+      error = 'Please fill all fields';
+      return;
+    }
+
     const stationMetadata: StationMetadata = {
       name,
       description,
@@ -28,8 +42,11 @@
       },
     };
 
+    isProcessing = true;
     const metadata = await client.store(stationMetadata);
-    await getStatus(metadata.ipnft);
+    const status = await getStatus(metadata.ipnft);
+    await createStation(status.cid, monthlyFee, $accountStore.wallet);
+    isProcessing = false;
   };
 
   const getImgBlob = async (img: string): Promise<Blob> => {
@@ -38,6 +55,38 @@
 
   const getStatus = async (cid: CIDString): Promise<NFTStorageStatus> =>
     await client.status(cid);
+
+  const createStation = async (
+    cid: string,
+    monthlyFee: ethers.BigNumberish,
+    owner: string,
+  ) => {
+    const registry = {
+      goerli: {
+        stations: '0xA78Ad8Ec725C50D6FFF8c9B43Ded2CD93C5f9e75',
+        subscriptions: '0x9BC147caE0f2255c9cb86977b1A985f5Bac3f98a',
+        url: '',
+      },
+    };
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const station: StationsTypes.Stations = new Contract(
+      registry.goerli.stations,
+      StationsABI.abi,
+    ).connect(signer) as any;
+
+    const tx = await station.createStation(
+      monthlyFee,
+      cid,
+      owner,
+      new Uint8Array(),
+    );
+    const receipt = await tx.wait(3);
+    if (receipt.status === 0) {
+      throw new Error('failed');
+    }
+  };
 </script>
 
 <form
@@ -85,12 +134,23 @@
     </div>
   </div>
 
+  {#if error}
+    <div class="bg-red-300 border-red-500 border px-4 py-2 rounded-lg my-2">
+      <p>{error}</p>
+    </div>
+  {/if}
+
   <button
-    class="px-5 py-3 rounded-3xl bg-primary-500 text-sm font-bold self-end"
+    class="px-5 py-3 rounded-3xl text-sm font-bold self-end {isProcessing
+      ? 'bg-primary-900'
+      : 'bg-primary-500'}"
     type="submit"
     form="station"
     value="Submit"
+    disabled={isProcessing}
   >
-    {state.toUpperCase()} Station
+    {isProcessing
+      ? `${state === 'create' ? 'Creating' : 'Updating'} Station...`
+      : `${state === 'create' ? 'Create' : 'Update'} Station`}
   </button>
 </form>
