@@ -21,8 +21,6 @@ dataSources:
         - name: Stations
           file: ./abis/Stations.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
         - event: StationCreated(uint256,uint256,string)
           handler: handleStationCreated
         - event: StationFeeUpdated(uint256,uint256)
@@ -51,8 +49,6 @@ dataSources:
         - name: Subscriptions
           file: ./abis/Subscriptions.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
         - event: SubscriptionCreated(uint256,uint256)
           handler: handleSubscriptionCreated
       file: ./src/nft-subscriptions.ts
