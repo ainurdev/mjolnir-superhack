@@ -98,14 +98,6 @@ spec:
               containerPort: 8030
               protocol: TCP
             {{- end }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8040
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8040
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

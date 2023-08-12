@@ -7,7 +7,7 @@
 [store.primary]
   connection = "postgresql://{{ $pgUser }}:$PG_PASS@{{ $pgHost }}/{{ $pgDB }}"
   weight = 1
-  pool_size = 10
+  pool_size = 50
 
 {{- if .Values.postgres.replicaHost }}
 [store.primary.replicas.replica]
