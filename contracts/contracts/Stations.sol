@@ -32,11 +32,15 @@ contract Stations is IStations, ERC721("MjolnirStation", "MST") {
         uint256 stationId = uint256(
             keccak256(abi.encode([block.chainid, salt]))
         );
+        emit StationCreated({
+            stationId: stationId,
+            monthlyFee: monthlyFee,
+            cid: cid
+        });
+        stationMonthlyFee[stationId] = monthlyFee;
+
         _safeMint({tokenId: stationId, to: to, data: data});
         _nextSalt = salt + 1;
-
-        stationMonthlyFee[stationId] = monthlyFee;
-        emit StationCreated({stationId:stationId, monthlyFee:monthlyFee, cid:cid});
     }
 
     function updateStationFee(
