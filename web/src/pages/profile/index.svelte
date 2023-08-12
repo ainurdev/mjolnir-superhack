@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { url } from "@roxi/routify";
-  import { fly } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
-  import { DEFAULT_STATION } from "@/constants";
-  import type { Station } from "@/types";
-  import PlusIcon from "@/icons/Plus.svelte";
-  import CreatorStation from "../_components/CreatorStation.svelte";
+  import { url } from '@roxi/routify';
+  import { fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+  import PlusIcon from '@/icons/Plus.svelte';
+  import CreatorStation from '../_components/CreatorStation.svelte';
+  import { accountStore, createStationsStore } from '@/stores';
 
-  const stations: Station[] = new Array(2).fill(DEFAULT_STATION);
+  const stations = createStationsStore({
+    where: {
+      owner: $accountStore.wallet,
+    },
+  });
 </script>
 
 <div
@@ -23,15 +26,21 @@
     <h2 class="text-xl sm:text-3xl font-bold">Your Stations</h2>
     <a
       class="text-sm font-bold flex items-center gap-1"
-      href={$url("./create")}
+      href={$url('./create')}
     >
       <PlusIcon class="w-6 h-6" />
       <span class="text-xs sm:text-base"> New Station </span>
     </a>
   </div>
   <div class="flex flex-col gap-5">
-    {#each stations as station}
-      <CreatorStation {station} />
-    {/each}
+    {#if $stations.fetching}
+      <p>Loading</p>
+    {:else if $stations.error}
+      <p>Oh no... {$stations.error.message}</p>
+    {:else}
+      {#each $stations.data.stations as station}
+        <CreatorStation {station} />
+      {/each}
+    {/if}
   </div>
 </div>

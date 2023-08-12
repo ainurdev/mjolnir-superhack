@@ -1,11 +1,13 @@
-<script>
-  import { fly } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
-  import { params } from "@roxi/routify";
-  import StationForm from "../_components/StationForm.svelte";
-  import { DEFAULT_STATION } from "@/constants";
+<script lang="ts">
+  import { fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+  import { params } from '@roxi/routify';
+  import StationForm from '../_components/StationForm.svelte';
+  import { DEFAULT_STATION } from '@/constants';
 
-  $: stationUID = $params.uid;
+  let stationCID: string;
+
+  $: stationCID = $params.cid;
 </script>
 
 <div

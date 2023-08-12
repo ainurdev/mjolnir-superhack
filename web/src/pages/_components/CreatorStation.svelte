@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { url } from "@roxi/routify";
-  import type { Station } from "@/types";
-  import { DEFAULT_STATION } from "@/constants";
+  import { url } from '@roxi/routify';
+  import type { Station } from '@/types';
 
-  import UserIcon from "@/icons/User.svelte";
-  import ClockIcon from "@/icons/Clock.svelte";
+  import UserIcon from '@/icons/User.svelte';
+  import ClockIcon from '@/icons/Clock.svelte';
 
-  export let station: Station = DEFAULT_STATION;
+  export let station: Station;
 </script>
 
 <a
-  href={$url("/stream/:uid", { uid: station.uid })}
+  href={$url('/stream/:cid', { cid: station.cid })}
   class="p-5 rounded-3xl bg-zinc-900 flex md:flex-row flex-col"
 >
   <img
@@ -46,7 +45,7 @@
     />
     <div class="text-sm font-medium px-3">{station.name}</div>
     <a
-      href={$url(`./edit?uid=${station.uid}`)}
+      href={$url(`./edit?cid=${station.cid}`)}
       class="border border-primary-400 text-xs font-bold px-4 py-2 rounded-3xl"
     >
       Edit

@@ -1,6 +1,14 @@
 <script>
-  import { fly } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
+  import { goto } from '@roxi/routify';
+  import { fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+  import { accountStore } from '@/stores';
+
+  $: {
+    if (!$accountStore.wallet) {
+      $goto('/login');
+    }
+  }
 </script>
 
 <div

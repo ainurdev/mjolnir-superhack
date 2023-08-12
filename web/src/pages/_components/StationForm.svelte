@@ -1,35 +1,34 @@
 <script lang="ts">
   import { NFTStorage, type CIDString } from 'nft.storage';
   import ImgUpload from './ImgUpload.svelte';
-  import type { Station, StationMetadata } from '@/types';
+  import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
+    owner: '',
     name: '',
     cover: '',
-    avatar: '',
+    image: '',
     description: '',
-    monthly_fee: 0,
+    isStreamPrivate: false,
+    monthlyFee: 0,
   };
 
   const NFT_Storage_KEY = import.meta.env.VITE_NFT_STORAGE_API_KEY;
   const client = new NFTStorage({ token: NFT_Storage_KEY });
 
   const submitStation = async () => {
-    const { name, cover, avatar, description, monthly_fee } = station;
+    const { name, cover, image, description, monthlyFee } = station;
     const stationMetadata: StationMetadata = {
       name,
       description,
-      image: await getImgBlob(cover),
+      image: await getImgBlob(image),
       properties: {
-        avatar: await getImgBlob(avatar),
-        monthly_fee,
+        cover: await getImgBlob(cover),
       },
     };
 
     const metadata = await client.store(stationMetadata);
-    console.table(metadata);
-
     await getStatus(metadata.ipnft);
   };
 
@@ -37,10 +36,8 @@
     return await fetch(img).then(r => r.blob());
   };
 
-  const getStatus = async (cid: CIDString) => {
-    const status = await client.status(cid);
-    console.log('Status: ', status);
-  };
+  const getStatus = async (cid: CIDString): Promise<NFTStorageStatus> =>
+    await client.status(cid);
 </script>
 
 <form
@@ -52,7 +49,7 @@
   <div class="flex sm:flex-row flex-col gap-2">
     <ImgUpload
       class="!w-32 self-start"
-      bind:uploaded={station.avatar}
+      bind:uploaded={station.image}
       type="avatar"
     />
     <div class="flex flex-col gap-2 w-full">
@@ -77,7 +74,7 @@
           subscription for your audience)
         </span>
         <input
-          bind:value={station.monthly_fee}
+          bind:value={station.monthlyFee}
           class="w-60"
           placeholder="420 $"
           type="number"

@@ -3,27 +3,11 @@
   import { quintOut } from 'svelte/easing';
 
   import StationCard from '../_components/StationCard.svelte';
-  import { onMount } from 'svelte';
-  import { request } from '@/utils';
-  import type { Station } from '@/types';
+  import { createStationsStore } from '@/stores';
 
+  const stations = createStationsStore();
 
-  let stations: Station[] = [];
-
-  const getStations = async () => {
-    const response: any = await request('https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations', {
-      method: 'GET',
-      ignoreBaseUrl: true,
-    });
-
-    if (response && response.stations) {
-      stations = response.stations;
-    }
-  }
-
-  onMount(async () => {
-    await getStations();
-  });
+  $: console.log($stations);
 </script>
 
 <div
@@ -36,8 +20,14 @@
   class="flex flex-col items-center"
 >
   <div class="flex flex-wrap justify-center gap-5 mb-5">
-    {#each stations as station}
-      <StationCard station={station} />
-    {/each}
+    {#if $stations.fetching}
+      <p>Loading</p>
+    {:else if $stations.error}
+      <p>Oh no... {$stations.error.message}</p>
+    {:else}
+      {#each $stations.data.stations as station}
+        <StationCard {station} />
+      {/each}
+    {/if}
   </div>
 </div>
