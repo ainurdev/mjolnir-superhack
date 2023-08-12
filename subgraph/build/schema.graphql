@@ -1,19 +1,17 @@
-type Stream @entity(immutable: true) {
+type Station @entity {
   id: String!
-  isPrivate: Boolean!
-  cid: String!
-}
-
-type Station @entity(immutable: true) {
-  id: String!
-  owner: Bytes!
-  cid: String!
+  owner: String!
   monthlyFee: BigInt!
-  stream: Stream
+  name: String
+  description: String
+  image: String
+  cover: String
+  streamCid: String
+  isStreamPrivate: Boolean!
 }
 
-type Subscription @entity(immutable: true) {
+type NFTSubscription @entity {
   id: String!
   station: Station!
-  owner: Bytes!
+  owner: String!
 }

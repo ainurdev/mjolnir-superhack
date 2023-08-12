@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { JSONValueKind, ipfs, json, log } from '@graphprotocol/graph-ts';
 
 import {
   PrivateStreamPublished as PrivateStreamPublishedEvent,
@@ -8,16 +8,72 @@ import {
   StationFeeUpdated as StationFeeUpdatedEvent,
   Transfer as TransferEvent,
 } from '../generated/Stations/Stations';
-import { Station, Stream } from '../generated/schema';
+import { Station } from '../generated/schema';
+
+function fillMetaData(station: Station, cid: string): void {
+  station.name = null;
+  station.description = null;
+  station.image = null;
+  station.cover = null;
+  station.streamCid = null;
+  station.isStreamPrivate = false;
+
+  const data = ipfs.cat(cid);
+  if (data === null) {
+    log.error(`could not get cid of ${cid} for stationId of ${station.id}`, []);
+    return;
+  }
+  const result = json.try_fromBytes(data);
+  if (result.isError || result.value.kind !== JSONValueKind.OBJECT) {
+    log.error(`could parse json for cid of ${cid}`, []);
+    return;
+  }
+  const value = result.value.toObject();
+
+  const name = value.get('name');
+  if (name !== null && !name.isNull() && name.kind === JSONValueKind.STRING) {
+    station.name = name.toString();
+  }
+
+  const description = value.get('description');
+  if (
+    description !== null &&
+    !description.isNull() &&
+    description.kind === JSONValueKind.STRING
+  ) {
+    station.description = description.toString();
+  }
+
+  const image = value.get('image');
+  if (
+    image !== null &&
+    !image.isNull() &&
+    image.kind === JSONValueKind.STRING
+  ) {
+    station.image = image.toString();
+  }
+
+  const properties = value.get('properties');
+  if (properties === null || properties.kind !== JSONValueKind.OBJECT) {
+    return;
+  }
+
+  const cover = properties.toObject().get('cover');
+  if (
+    cover !== null &&
+    !cover.isNull() &&
+    cover.kind === JSONValueKind.STRING
+  ) {
+    station.cover = cover.toString();
+  }
+}
 
 export function handleStationCreated(event: StationCreatedEvent): void {
-  const station = new Station(event.params.stationId.toString());
-  station.owner = Address.fromString(
-    '0x0000000000000000000000000000000000000000',
-  );
+  const stationId = event.params.stationId.toString();
+  const station = new Station(stationId);
+  station.owner = '0x0000000000000000000000000000000000000000';
   station.monthlyFee = event.params.monthlyFee;
-  station.cid = event.params.cid;
-  station.stream = null;
+  fillMetaData(station, event.params.cid);
   station.save();
 }
 
@@ -37,19 +93,13 @@ export function handleStationCidUpdated(event: StationCidUpdatedEvent): void {
   if (station === null) {
     throw new Error(`stationId for StationCidUpdated is invalid: ${stationId}`);
   }
-  station.cid = event.params.cid;
+  fillMetaData(station, event.params.cid);
   station.save();
 }
 
 export function handlePublicStreamPublished(
   event: PublicStreamPublishedEvent,
 ): void {
-  const streamCid = event.params.cid;
-  const streamId = `public-${streamCid}`;
-  const stream = new Stream(streamId);
-  stream.isPrivate = false;
-  stream.cid = streamCid;
-
   const stationId = event.params.stationId.toString();
   const station = Station.load(stationId);
   if (station === null) {
@@ -57,31 +107,23 @@ export function handlePublicStreamPublished(
       `stationId for PublicStreamPublished is invalid: ${stationId}`,
     );
   }
-  station.stream = streamId;
-
-  stream.save();
+  station.streamCid = event.params.cid;
+  station.isStreamPrivate = false;
   station.save();
 }
 
 export function handlePrivateStreamPublished(
   event: PrivateStreamPublishedEvent,
 ): void {
-  const streamCid = event.params.cid;
-  const streamId = `private-${streamCid}`;
-  let stream = new Stream(streamId);
-  stream.isPrivate = true;
-  stream.cid = streamCid;
-
   const stationId = event.params.stationId.toString();
   const station = Station.load(stationId);
   if (station === null) {
     throw new Error(
-      `stationId for PrivateStreamPublished is invalid: ${stationId}`,
+      `stationId for PublicStreamPublished is invalid: ${stationId}`,
     );
   }
-  station.stream = streamId;
-
-  stream.save();
+  station.streamCid = event.params.cid;
+  station.isStreamPrivate = true;
   station.save();
 }
 
@@ -91,6 +133,6 @@ export function handleTransfer(event: TransferEvent): void {
   if (station === null) {
     throw new Error(`stationId for handleTransfer is invalid: ${stationId}`);
   }
-  station.owner = event.params.to;
+  station.owner = event.params.to.toHexString();
   station.save();
 }

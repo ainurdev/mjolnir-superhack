@@ -2,8 +2,10 @@ import { Address, BigInt } from '@graphprotocol/graph-ts';
 import {
   afterEach,
   assert,
+  beforeAll,
   clearStore,
   describe,
+  mockIpfsFile,
   test,
 } from 'matchstick-as/assembly/index';
 
@@ -11,57 +13,18 @@ import {
   handleSubscriptionCreated,
   handleTransfer,
 } from '../src/nft-subscriptions';
-import {
-  handleStationCreated,
-  handleTransfer as handleStationTransfer,
-} from '../src/stations';
 
-import {
-  createStationCreatedEvent,
-  createTransferEvent as createStationTransferEvent,
-} from './stations-utils';
+import { createStation } from './stations-utils';
 import {
   createSubscriptionCreatedEvent,
   createTransferEvent,
 } from './subscriptions-utils';
 
-class createStationResult {
-  constructor(
-    public stationId: BigInt,
-    public owner: Address,
-    public monthlyFee: BigInt,
-    public cid: string,
-  ) {}
-}
-
-function createStation(): createStationResult {
-  const stationId = BigInt.fromI32(123);
-  const monthlyFee = BigInt.fromI32(10);
-  const cid = 'test cid';
-  const stationCreatedEvent = createStationCreatedEvent(
-    stationId,
-    monthlyFee,
-    cid,
-  );
-  const zeroAddress = Address.fromString(
-    '0x0000000000000000000000000000000000000000',
-  );
-  const owner = Address.fromString(
-    '0x0000000000000000000000000000000000000001',
-  );
-  const transferEvent = createStationTransferEvent(
-    zeroAddress,
-    owner,
-    stationId,
-  );
-
-  handleStationCreated(stationCreatedEvent);
-  handleStationTransfer(transferEvent);
-
-  return new createStationResult(stationId, owner, monthlyFee, cid);
-}
-
 describe('Subscription', () => {
+  beforeAll(function () {
+    mockIpfsFile('station1_metadata', 'tests/ipfs/station1_metadata.json');
+  });
+
   afterEach(function () {
     clearStore();
   });
