@@ -8,12 +8,12 @@
 </script>
 
 <a
-  href={$url('/stream/:uid', { uid: station.uid })}
+  href={$url('/station/:cid', { cid: station.id })}
   class="w-full rounded-3xl bg-zinc-900"
 >
   <div class="flex px-5 items-center gap-4 font-bold">
     <img
-      src={station.avatar}
+      src={station.image}
       class="rounded-full w-14 h-14 relative top-3 shadow-md"
       alt="Station Avatar"
     />
@@ -27,13 +27,13 @@
     <div class="flex items-center gap-1 mt-2">
       <ClockIcon class="w-4 h-4 fill-zinc-300" />
       <span class="text-xs text-zinc-400">
-        Last stream {station.last_stream}
+        Last stream {'never'}
       </span>
     </div>
     <div class="flex items-center gap-1 mt-1">
       <UserIcon class="w-4 h-4 fill-zinc-300" />
       <span class="text-xs text-zinc-400">
-        {station.subscribers} subscribers
+        {'1'} subscriber
       </span>
     </div>
   </div>

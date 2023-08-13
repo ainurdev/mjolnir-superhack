@@ -1,7 +1,12 @@
-import { createClient } from '@urql/svelte';
+import { cacheExchange, createClient, fetchExchange, setContextClient } from '@urql/svelte';
 
-export default createClient({
-  url: 'https://graph.ainur.dev/subgraphs/name/example/graphql',
-  fetchOptions: {},
-  exchanges: [],
-});
+const initGraphql = () => {
+  const client = createClient({
+    url: 'https://graphnode.ainur.dev/subgraphs/name/mjolnir-ethereum-goerli',
+    exchanges: [cacheExchange, fetchExchange],
+  });
+
+  setContextClient(client);
+};
+
+export default initGraphql;

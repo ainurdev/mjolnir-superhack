@@ -8,12 +8,14 @@
   import Player from '../_components/Player.svelte';
   import LoadingSpinner from '../_components/LoadingSpinner.svelte';
 
-  let station: Station;
-  let loading = true;
+  let station: Station,
+    stationCID: string,
+    uri: string,
+    loading = true;
 
   const getStation = async () => {
     const response: any = await request(
-      `https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations?uid=${stationUID}`,
+      `https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations?uid=${stationCID}`,
       {
         method: 'GET',
         ignoreBaseUrl: true,
@@ -30,7 +32,7 @@
     loading = false;
   });
 
-  $: stationUID = $params.uid;
+  $: stationCID = $params.cid;
 </script>
 
 {#if loading}
@@ -49,7 +51,7 @@
       >
         <img class="cover" src={station.cover} alt="cover" />
         <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
-          <Player src={station.uri} />
+          <Player src={uri} />
         </div>
         <div
           class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
@@ -57,7 +59,7 @@
           <div class="flex gap-5 md:flex-row flex-col">
             <img
               class="rounded-full w-24 h-24"
-              src={station.avatar}
+              src={station.image}
               alt="avatar"
             />
             <div class="flex flex-col">
@@ -72,7 +74,7 @@
           <button
             class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
           >
-            Subscribe ${station.monthly_fee}
+            Subscribe ${station.monthlyFee}
           </button>
         </div>
       </div>

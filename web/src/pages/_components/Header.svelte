@@ -48,7 +48,7 @@
   </a>
   <div class="flex items-center gap-2">
     <a
-      href={$url('/stations')}
+      href={$url('/profile')}
       class="sm:px-4 px-3 py-2 font-bold text-xs sm:text-sm rounded-3xl bg-primary-500"
     >
       Your Stations

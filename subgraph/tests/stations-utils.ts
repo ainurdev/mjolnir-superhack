@@ -18,10 +18,7 @@ class createStationResult {
     public stationId: BigInt,
     public owner: string,
     public monthlyFee: BigInt,
-    public name: string,
-    public description: string,
-    public image: string,
-    public cover: string,
+    public cid: string,
   ) {}
 }
 
@@ -29,10 +26,6 @@ export function createStation(): createStationResult {
   const stationId = BigInt.fromI32(123);
   const monthlyFee = BigInt.fromI32(10);
   const cid = 'station1_metadata';
-  const name = 'random station 1 name';
-  const description = 'random station 1 description';
-  const image = 'ipfs://randomimage1';
-  const cover = 'ipfs://randomcover1';
   const stationCreatedEvent = createStationCreatedEvent(
     stationId,
     monthlyFee,
@@ -49,15 +42,7 @@ export function createStation(): createStationResult {
   handleStationCreated(stationCreatedEvent);
   handleTransfer(transferEvent);
 
-  return new createStationResult(
-    stationId,
-    owner,
-    monthlyFee,
-    name,
-    description,
-    image,
-    cover,
-  );
+  return new createStationResult(stationId, owner, monthlyFee, cid);
 }
 
 export function createApprovalEvent(

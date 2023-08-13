@@ -1,45 +1,97 @@
 <script lang="ts">
   import { NFTStorage, type CIDString } from 'nft.storage';
+  import { Contract, ethers } from 'ethers';
+  import StationsABI from '@mjolnir/contracts/artifacts/contracts/Stations.sol/Stations.json';
+  import type * as StationsTypes from '@mjolnir/contracts/typechain-types/contracts/Stations';
+  import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
   import ImgUpload from './ImgUpload.svelte';
-  import type { Station, StationMetadata } from '@/types';
+  import { accountStore } from '@/stores';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
+    owner: '',
     name: '',
     cover: '',
-    avatar: '',
+    image: '',
     description: '',
-    monthly_fee: 0,
+    isStreamPrivate: false,
+    monthlyFee: 0,
   };
+
+  let isProcessing: boolean = false,
+    error: string = '';
 
   const NFT_Storage_KEY = import.meta.env.VITE_NFT_STORAGE_API_KEY;
   const client = new NFTStorage({ token: NFT_Storage_KEY });
 
   const submitStation = async () => {
-    const { name, cover, avatar, description, monthly_fee } = station;
+    const { name, cover, image, description, monthlyFee } = station;
+
+    error = '';
+    if (!name || !cover || !image || !description) {
+      error = 'Please fill all fields';
+      return;
+    }
+
     const stationMetadata: StationMetadata = {
       name,
       description,
-      image: await getImgBlob(cover),
+      image: await getImgBlob(image),
       properties: {
-        avatar: await getImgBlob(avatar),
-        monthly_fee,
+        cover: await getImgBlob(cover),
       },
     };
 
+    isProcessing = true;
     const metadata = await client.store(stationMetadata);
-    console.table(metadata);
-
-    await getStatus(metadata.ipnft);
+    console.log(metadata);
+    const status = await getStatus(metadata.ipnft);
+    console.log(status);
+    console.log('waiting');
+    setTimeout(async () => {
+      console.log('create station');
+      await createStation(metadata.ipnft, monthlyFee, $accountStore.wallet);
+      isProcessing = false;
+    }, 60000);
   };
 
   const getImgBlob = async (img: string): Promise<Blob> => {
     return await fetch(img).then(r => r.blob());
   };
 
-  const getStatus = async (cid: CIDString) => {
-    const status = await client.status(cid);
-    console.log('Status: ', status);
+  const getStatus = async (cid: CIDString): Promise<NFTStorageStatus> =>
+    await client.status(cid);
+
+  const createStation = async (
+    cid: string,
+    monthlyFee: ethers.BigNumberish,
+    owner: string,
+  ) => {
+    const registry = {
+      goerli: {
+        stations: '0xCdad2aEBeC7CED98781aCB8Bf787E182D1C6ad0d',
+        subscriptions: '0xdAe58536c54964F29300DE6C7F573D500a28AF94',
+        url: '',
+      },
+    };
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const station: StationsTypes.Stations = new Contract(
+      registry.goerli.stations,
+      StationsABI.abi,
+    ).connect(signer) as any;
+
+    const tx = await station.createStation(
+      monthlyFee,
+      cid,
+      owner,
+      new Uint8Array(),
+    );
+    const receipt = await tx.wait(3);
+    if (receipt.status === 0) {
+      throw new Error('failed');
+    }
   };
 </script>
 
@@ -52,7 +104,7 @@
   <div class="flex sm:flex-row flex-col gap-2">
     <ImgUpload
       class="!w-32 self-start"
-      bind:uploaded={station.avatar}
+      bind:uploaded={station.image}
       type="avatar"
     />
     <div class="flex flex-col gap-2 w-full">
@@ -77,7 +129,7 @@
           subscription for your audience)
         </span>
         <input
-          bind:value={station.monthly_fee}
+          bind:value={station.monthlyFee}
           class="w-60"
           placeholder="420 $"
           type="number"
@@ -88,12 +140,23 @@
     </div>
   </div>
 
+  {#if error}
+    <div class="bg-red-300 border-red-500 border px-4 py-2 rounded-lg my-2">
+      <p>{error}</p>
+    </div>
+  {/if}
+
   <button
-    class="px-5 py-3 rounded-3xl bg-primary-500 text-sm font-bold self-end"
+    class="px-5 py-3 rounded-3xl text-sm font-bold self-end {isProcessing
+      ? 'bg-primary-900'
+      : 'bg-primary-500'}"
     type="submit"
     form="station"
     value="Submit"
+    disabled={isProcessing}
   >
-    {state.toUpperCase()} Station
+    {isProcessing
+      ? `${state === 'create' ? 'Creating' : 'Updating'} Station...`
+      : `${state === 'create' ? 'Create' : 'Update'} Station`}
   </button>
 </form>
