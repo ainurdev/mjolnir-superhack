@@ -25,7 +25,7 @@ describe('Stations', function () {
     const stationId1 = receipt?.logs
       .filter(log => log.address === stations.target)
       .map(log => stations.interface.parseLog(log))
-      .find(log => (log.name = 'Transfer')).args[2];
+      .find(log => log.name === 'Transfer').args[2];
     return { ...base, stationId1 };
   }
 
@@ -79,7 +79,7 @@ describe('Stations', function () {
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
         .map(log => stations.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       await expect(stations.stationMonthlyFee(stationId)).to.eventually.equal(
         fee,
       );
@@ -99,7 +99,7 @@ describe('Stations', function () {
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
         .map(log => stations.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       await expect(stations.ownerOf(stationId)).to.eventually.equal(
         owner1.address,
       );
@@ -119,7 +119,7 @@ describe('Stations', function () {
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
         .map(log => stations.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       await expect(tx)
         .to.emit(stations, 'StationCreated')
         .withArgs(stationId, fee, cid);

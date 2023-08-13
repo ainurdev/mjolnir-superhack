@@ -40,31 +40,15 @@ monitoring:
 ingress:
   enabled: true
   hosts:
-  - graph.ainur.dev
+  - graphnode.ainur.dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: mjolnir-superhack-ip
-    networking.gke.io/managed-certificates: graphprotocol-node-query-cert
-    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.class: caddy
 
 
 # If you are using standalone installation option it could be useful for you to enable ingress to allow your application outside of the cluster connect to query-nodes by graphql websocket.
 ingressWebsocket:
   enabled: true
   hosts:
-  - graph-ws.ainur.dev
+  - graphnode-ws.ainur.dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: mjolnir-superhack-ip
-    networking.gke.io/managed-certificates: graphprotocol-node-query-cert
-    kubernetes.io/ingress.class: "gce"
-
-indexIngress:
-  enabled: false
-  hosts:
-  - graph-index.ainur.dev
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: graph-rpc-ip
-    networking.gke.io/managed-certificates: graphprotocol-node-index-cert
-    kubernetes.io/ingress.class: "gce"
-  ipfs:
-    hosts:
-    - ipfs.ainur.dev
+    kubernetes.io/ingress.class: caddy

@@ -32,14 +32,3 @@ spec:
                 port:
                   name: api
 {{- end }}
----
-{{- if .Values.indexIngress.enabled -}}
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: {{ include "graphprotocol-node.fullname" . }}-cert
-spec:
-  domains:
-    - {{ first .Values.indexIngress.hosts }}
-    - {{ first .Values.indexIngress.ipfs.hosts }}
-{{- end }}

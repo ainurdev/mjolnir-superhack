@@ -24,10 +24,10 @@ postgres:
 
 resources:
   requests:
-    cpu: 1
+    cpu: 0.5
     memory: 0.5Gi
   limits:
-    cpu: 1.5
+    cpu: 1
     memory: 1Gi
 
 role: "index-node"
@@ -36,13 +36,11 @@ monitoring:
   enabled: true
 
 indexIngress:
-  enabled: true
+  enabled: false
   hosts:
   - graph-index.ainur.dev
   annotations:
     kubernetes.io/ingress.global-static-ip-name: graph-rpc-ip
-    networking.gke.io/managed-certificates: graphprotocol-node-index-cert
-    kubernetes.io/ingress.class: "gce"
   ipfs:
     hosts:
     - ipfs.ainur.dev

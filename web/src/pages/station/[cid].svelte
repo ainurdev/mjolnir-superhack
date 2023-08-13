@@ -6,9 +6,12 @@
   import { request } from '@/utils';
   import type { Station } from '@/types';
   import Player from '../_components/Player.svelte';
+  import LoadingSpinner from '../_components/LoadingSpinner.svelte';
 
-  let station: Station, stationCID: string;
-  let uri: string;
+  let station: Station,
+    stationCID: string,
+    uri: string,
+    loading = true;
 
   const getStation = async () => {
     const response: any = await request(
@@ -26,53 +29,56 @@
 
   onMount(async () => {
     await getStation();
+    loading = false;
   });
 
   $: stationCID = $params.cid;
 </script>
 
-{#if station}
+{#if loading}
+  <LoadingSpinner />
+{:else}
   {#key station}
-    <div
-      in:fly={{
-        duration: 300,
-        y: -20,
-        opacity: 0.2,
-        easing: quintOut,
-      }}
-      class="flex flex-col items-center relative sm:px-20"
-    >
-      <img class="cover" src={station.cover} alt="cover" />
-      <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
-        {#if uri}
-          <Player src={uri} />
-        {/if}
-      </div>
+    {#if station}
       <div
-        class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
+        in:fly={{
+          duration: 300,
+          y: -20,
+          opacity: 0.2,
+          easing: quintOut,
+        }}
+        class="flex flex-col items-center relative sm:px-20"
       >
-        <div class="flex gap-5 md:flex-row flex-col">
-          <img
-            class="rounded-full w-24 h-24"
-            src={station.image}
-            alt="avatar"
-          />
-          <div class="flex flex-col">
-            <h2 class="text-3xl font-black">
-              {station.name}
-            </h2>
-            <p class="text-lg text-zinc-200 mt-2">
-              {station.description}
-            </p>
-          </div>
+        <img class="cover" src={station.cover} alt="cover" />
+        <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
+          <Player src={uri} />
         </div>
-        <button
-          class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+        <div
+          class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
         >
-          Subscribe ${station.monthlyFee}
-        </button>
+          <div class="flex gap-5 md:flex-row flex-col">
+            <img
+              class="rounded-full w-24 h-24"
+              src={station.image}
+              alt="avatar"
+            />
+            <div class="flex flex-col">
+              <h2 class="text-3xl font-black">
+                {station.name}
+              </h2>
+              <p class="text-lg text-zinc-200 mt-2">
+                {station.description}
+              </p>
+            </div>
+          </div>
+          <button
+            class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+          >
+            Subscribe ${station.monthlyFee}
+          </button>
+        </div>
       </div>
-    </div>
+    {/if}
   {/key}
 {/if}
 

@@ -6,9 +6,9 @@ dataSources:
     name: Stations
     network: goerli
     source:
-      address: '0xA78Ad8Ec725C50D6FFF8c9B43Ded2CD93C5f9e75'
+      address: '0xCdad2aEBeC7CED98781aCB8Bf787E182D1C6ad0d'
       abi: Stations
-      startBlock: 9490409
+      startBlock: 9506297
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,9 +36,9 @@ dataSources:
     name: Subscriptions
     network: goerli
     source:
-      address: '0x9BC147caE0f2255c9cb86977b1A985f5Bac3f98a'
+      address: '0xdAe58536c54964F29300DE6C7F573D500a28AF94'
       abi: Subscriptions
-      startBlock: 9490409
+      startBlock: 9506297
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

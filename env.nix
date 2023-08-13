@@ -34,6 +34,7 @@ stdenv.mkDerivation {
         kubernetes-helm
         helmfile
         k9s
+        doctl
 
         act
 

@@ -20,7 +20,7 @@ spec:
               service:
                 name: {{ include "graphprotocol-node.fullname" $ }}
                 port:
-                  name: graphql
+                  number: 8000
     - host: {{ first .Values.ingressWebsocket.hosts }}
       http:
         paths:
@@ -30,16 +30,5 @@ spec:
               service:
                 name: {{ include "graphprotocol-node.fullname" $ }}
                 port:
-                  name: graphql-ws
-{{- end }}
----
-{{- if .Values.ingressWebsocket.enabled -}}
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: {{ include "graphprotocol-node.fullname" . }}-cert
-spec:
-  domains:
-    - {{ first .Values.ingress.hosts }}
-    - {{ first .Values.ingressWebsocket.hosts }}
+                  number: 8001
 {{- end }}

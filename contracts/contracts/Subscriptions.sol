@@ -29,9 +29,10 @@ contract Subscriptions is ISubscriptions, ERC721("MjolnirSubscription", "MSB") {
         uint256 subscriptionId = uint256(
             keccak256(abi.encode([stationId, number]))
         );
+        emit SubscriptionCreated(stationId, subscriptionId);
+
         _safeMint({tokenId: subscriptionId, to: to, data: data});
         subscribers[stationId] = number + 1;
-        emit SubscriptionCreated(stationId, subscriptionId);
 
         address stationOwner = _STATIONS_CONTRACT.ownerOf(stationId);
         bool succeeded;

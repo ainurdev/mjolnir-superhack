@@ -64,6 +64,8 @@ spec:
               value: {{ .Values.role | quote }}
             - name: GRAPH_KILL_IF_UNRESPONSIVE
               value: "false"
+            - name: GRAPH_ALLOW_NON_DETERMINISTIC_IPFS
+              value: "true"
             - name: ipfs
               value: {{ required "config.ipfs wasn't specified" .Values.config.ipfs | quote }}
             - name: GRAPH_ALLOW_NON_DETERMINISTIC_FULLTEXT_SEARCH
@@ -98,14 +100,6 @@ spec:
               containerPort: 8030
               protocol: TCP
             {{- end }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8040
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8040
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

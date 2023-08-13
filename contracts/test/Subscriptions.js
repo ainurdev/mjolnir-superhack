@@ -31,7 +31,7 @@ describe('Subscriptions', function () {
       const stationId = receipt?.logs
         .filter(log => log.address === stations.target)
         .map(log => stations.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       return stationId;
     };
     const stationId1 = await createStation(owner1);
@@ -90,7 +90,7 @@ describe('Subscriptions', function () {
       const subscriptionId = receipt?.logs
         .filter(log => log.address === subscriptions.target)
         .map(log => subscriptions.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       await expect(subscriptions.ownerOf(subscriptionId)).to.eventually.equal(
         user1.address,
       );
@@ -112,7 +112,7 @@ describe('Subscriptions', function () {
       const subscriptionId = receipt?.logs
         .filter(log => log.address === subscriptions.target)
         .map(log => subscriptions.interface.parseLog(log))
-        .find(log => (log.name = 'Transfer')).args[2];
+        .find(log => log.name === 'Transfer').args[2];
       await expect(tx)
         .to.emit(subscriptions, 'SubscriptionCreated')
         .withArgs(stationId1, subscriptionId);

@@ -1,12 +1,18 @@
 resources:
   requests:
-    cpu: "2"
+    cpu: "0.5"
     memory: 0.5Gi
   limits:
-    cpu: "2.5"
+    cpu: "1"
     memory: 1Gi
 
 numberOfInstances: 1
+
+postgresql:
+  version: "15"
+  parameters:  # Expert section
+    shared_buffers: "1GB"
+    max_connections: "500"
 
 volume:
   size: 150Gi
