@@ -4,17 +4,18 @@
   import { parseUnits } from 'ethers/utils';
   import StationsABI from '@mjolnir/contracts/artifacts/contracts/Stations.sol/Stations.json';
   import type * as StationsTypes from '@mjolnir/contracts/typechain-types/contracts/Stations';
-  import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
+  import type {
+    NFTStorageStatus,
+    Station,
+    StationMetadata,
+    StationStoreType,
+  } from '@/types';
   import ImgUpload from './ImgUpload.svelte';
   import { accountStore } from '@/stores';
   import { registry } from '@/constants';
-  import { onMount } from 'svelte';
-  import { fetchStationNFT } from '@/utils';
-  import { goto, params } from '@roxi/routify';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
-    owner: '',
     name: '',
     cover: '',
     image: '',
@@ -52,11 +53,14 @@
       const metadata = await client.store(stationMetadata);
 
       await getStatus(metadata.ipnft);
-      await createStation(
-        metadata.ipnft,
-        parseUnits(monthlyFee.toString(), 'ether'),
-        $accountStore.wallet,
-      );
+      if (state === 'create') {
+        await createStation(
+          metadata.ipnft,
+          parseUnits(monthlyFee.toString(), 'ether'),
+        );
+      } else {
+        await updateStation(metadata.ipnft);
+      }
     } catch (err) {
       error = err.message;
       isProcessing = false;
@@ -73,7 +77,6 @@
   const createStation = async (
     cid: string,
     monthlyFee: ethers.BigNumberish,
-    owner: string,
   ) => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
@@ -85,34 +88,31 @@
     const tx = await stationContract.createStation(
       monthlyFee,
       cid,
-      owner,
+      $accountStore.wallet,
       new Uint8Array(),
     );
     isProcessing = false;
-    const receipt = await tx.wait(0);
+    const receipt = await tx.wait(1);
     if (receipt.status === 0) {
       throw new Error('failed');
     }
   };
 
-  const loadStationNFT = async (cid: string) => {
-    const data = await fetchStationNFT(cid);
-    station.name = data.name;
-    station.cover = data.cover;
-    station.image = data.image;
-    station.description = data.description;
-  };
+  const updateStation = async (cid: string) => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const stationContract: StationsTypes.Stations = new Contract(
+      registry.goerli.stations,
+      StationsABI.abi,
+    ).connect(signer) as any;
 
-  onMount(() => {
-    if (state === 'edit') {
-      if (!$params.cid) {
-        $goto('/profile');
-        return;
-      }
-
-      loadStationNFT($params.cid);
+    const tx = await stationContract.updateStationCid(station.id, cid);
+    isProcessing = false;
+    const receipt = await tx.wait(1);
+    if (receipt.status === 0) {
+      throw new Error('failed');
     }
-  });
+  };
 </script>
 
 <form
@@ -143,20 +143,24 @@
         name="description"
         id="description"
       />
-      <div class="flex flex-col gap-2 my-6">
-        <span class="text-sm font-bold">Monthly fee for subscribers (ETH)</span>
-        <span class="text-sm">
-          (Set to 0 (zero) if you want free subscription for your audience)
-        </span>
-        <input
-          bind:value={station.monthlyFee}
-          class="w-60"
-          placeholder="0.005"
-          type="text"
-          name="monthly fee"
-          id="monthly-fee"
-        />
-      </div>
+      {#if state === 'create'}
+        <div class="flex flex-col gap-2 my-6">
+          <span class="text-sm font-bold"
+            >Monthly fee for subscribers (ETH)</span
+          >
+          <span class="text-sm">
+            (Set to 0 (zero) if you want free subscription for your audience)
+          </span>
+          <input
+            bind:value={station.monthlyFee}
+            class="w-60"
+            placeholder="0.005"
+            type="text"
+            name="monthly fee"
+            id="monthly-fee"
+          />
+        </div>
+      {/if}
     </div>
   </div>
 

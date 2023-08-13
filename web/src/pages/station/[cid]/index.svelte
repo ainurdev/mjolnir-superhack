@@ -82,7 +82,7 @@
       );
       isSubscribing = false;
       isSubscribed = true;
-      const receipt = await tx.wait(0);
+      const receipt = await tx.wait(1);
       if (receipt.status === 0) {
         throw new Error('failed');
       }

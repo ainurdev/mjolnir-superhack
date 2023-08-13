@@ -2,7 +2,7 @@ import type { Readable } from "svelte/store";
 
 export type Station = {
   id?: string;
-  owner: string;
+  owner?: string;
   monthlyFee: number;
   name?: string;
   description?: string;
