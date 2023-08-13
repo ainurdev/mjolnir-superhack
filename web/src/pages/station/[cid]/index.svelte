@@ -1,13 +1,18 @@
 <script lang="ts">
-  import { params } from '@roxi/routify';
+  import { goto, params } from '@roxi/routify';
   import type { Readable } from 'svelte/store';
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
+  import { Contract, ethers } from 'ethers';
+  import { formatUnits } from 'ethers/utils';
+  import SubscriptionsABI from '@mjolnir/contracts/artifacts/contracts/Subscriptions.sol/Subscriptions.json';
+  import type * as SubscriptionTypes from '@mjolnir/contracts/typechain-types/contracts/Subscriptions';
   import type { Station } from '@/types';
   import Player from '../../_components/Player.svelte';
   import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
   import { accountStore, createStationsStore } from '@/stores';
   import { fetchStationNFT } from '@/utils';
+  import { registry } from '@/constants';
 
   type StatinStoreType = Readable<{
     data: {
@@ -23,7 +28,9 @@
     cover: string,
     name: string,
     description: string,
-    isOwner: boolean;
+    isOwner: boolean,
+    isSubscribing: boolean,
+    isSubscribed: boolean;
 
   const fetchStationGraph = async (stationCid: string) => {
     station = createStationsStore({
@@ -50,6 +57,47 @@
     cover = data.cover;
     name = data.name;
     description = data.description;
+  };
+
+  const handleSubscribe = async () => {
+    if (!$accountStore.wallet) {
+      $goto('/login');
+      return;
+    }
+
+    if ($station.fetching || $station.error || !$station.data.stations.length)
+      return;
+
+    const s = $station.data.stations[0];
+    if (s.owner === $accountStore.wallet) {
+      isOwner = true;
+      return;
+    }
+
+    isSubscribing = true;
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const subscription: SubscriptionTypes.Subscriptions = new Contract(
+        registry.goerli.subscriptions,
+        SubscriptionsABI.abi,
+      ).connect(signer) as any;
+      debugger;
+      const tx = await subscription.createSubscription(
+        s.id,
+        $accountStore.wallet,
+        new Uint8Array(),
+      );
+      isSubscribing = false;
+      isSubscribed = true;
+      const receipt = await tx.wait(0);
+      if (receipt.status === 0) {
+        throw new Error('failed');
+      }
+    } catch (err) {
+      isSubscribed = false;
+      isSubscribing = false;
+    }
   };
 
   $: loadStationNFT($params.cid);
@@ -89,7 +137,7 @@
           </p>
         </div>
       </div>
-      {#if isOwner}
+      {#if isOwner || isSubscribed}
         <span
           class="bg-primary-200 text-primary-800 shrink-0 text-sm rounded-2xl px-5 py-3 font-bold"
         >
@@ -97,9 +145,18 @@
         </span>
       {:else}
         <button
-          class="bg-primary-500 hover:bg-primary-700 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+          class="{isSubscribing
+            ? 'bg-primary-300'
+            : 'bg-primary-500'} hover:bg-primary-700 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+          disabled={isSubscribing}
+          on:click|preventDefault={handleSubscribe}
         >
-          {`Subscribe ${$station.data.stations[0].monthlyFee / 10 ** 18}`}
+          {isSubscribing
+            ? 'Processing...'
+            : `Subscribe ${formatUnits(
+                $station.data.stations[0].monthlyFee,
+                18,
+              )}`}
         </button>
       {/if}
     </div>

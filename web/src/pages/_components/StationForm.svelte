@@ -1,6 +1,7 @@
 <script lang="ts">
   import { NFTStorage, type CIDString } from 'nft.storage';
   import { Contract, ethers } from 'ethers';
+  import { parseUnits } from 'ethers/utils';
   import StationsABI from '@mjolnir/contracts/artifacts/contracts/Stations.sol/Stations.json';
   import type * as StationsTypes from '@mjolnir/contracts/typechain-types/contracts/Stations';
   import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
@@ -16,7 +17,7 @@
     image: '',
     description: '',
     isStreamPrivate: false,
-    monthlyFee: 0,
+    monthlyFee: 0.005,
   };
 
   let isProcessing: boolean = false,
@@ -44,11 +45,19 @@
     };
 
     isProcessing = true;
-    const metadata = await client.store(stationMetadata);
+    try {
+      const metadata = await client.store(stationMetadata);
 
-    await getStatus(metadata.ipnft);
-    await createStation(metadata.ipnft, monthlyFee, $accountStore.wallet);
-    isProcessing = false;
+      await getStatus(metadata.ipnft);
+      await createStation(
+        metadata.ipnft,
+        parseUnits(monthlyFee.toString(), 'ether'),
+        $accountStore.wallet,
+      );
+    } catch (err) {
+      error = err.message;
+      isProcessing = false;
+    }
   };
 
   const getImgBlob = async (img: string): Promise<Blob> => {
@@ -76,7 +85,8 @@
       owner,
       new Uint8Array(),
     );
-    const receipt = await tx.wait(3);
+    isProcessing = false;
+    const receipt = await tx.wait(0);
     if (receipt.status === 0) {
       throw new Error('failed');
     }
@@ -111,16 +121,16 @@
         name="description"
         id="description"
       />
-      <div class="flex flex-col gap-2 mt-5">
+      <div class="flex flex-col gap-2 my-6">
+        <span class="text-sm font-bold">Monthly fee for subscribers (ETH)</span>
         <span class="text-sm">
-          Monthly fee for subscribers (Set to 0 (zero) if you want free
-          subscription for your audience)
+          (Set to 0 (zero) if you want free subscription for your audience)
         </span>
         <input
           bind:value={station.monthlyFee}
           class="w-60"
-          placeholder="420 $"
-          type="number"
+          placeholder="0.005"
+          type="text"
           name="monthly fee"
           id="monthly-fee"
         />

@@ -6,11 +6,27 @@
   import CreatorStation from '../_components/CreatorStation.svelte';
   import { accountStore, createStationsStore } from '@/stores';
 
-  const stations = createStationsStore({
-    where: {
-      owner: $accountStore.wallet,
+  const stations = createStationsStore(
+    {
+      where: {
+        owner: $accountStore.wallet,
+      },
     },
-  });
+    'cache-and-network',
+  );
+
+  const refetchStations = _ => {
+    createStationsStore(
+      {
+        where: {
+          owner: $accountStore.wallet,
+        },
+      },
+      'network-only',
+    );
+  };
+
+  $: refetchStations($accountStore.wallet);
 </script>
 
 <div
@@ -37,6 +53,11 @@
       <p>Loading</p>
     {:else if $stations.error}
       <p>Oh no... {$stations.error.message}</p>
+    {:else if $stations.data.stations.length === 0}
+      <p class="text-lg text-gray-400">
+        You don't have any stations yet. Use <b>"New Station"</b> to create your
+        first station and start streaming.
+      </p>
     {:else}
       {#each $stations.data.stations as station}
         <CreatorStation {station} />

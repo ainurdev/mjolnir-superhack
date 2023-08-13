@@ -34,12 +34,12 @@
     <div class="flex flex-col gap-1 mt-4 md:mt-0">
       <div class="flex gap-4 items-center">
         <span class="text-sm font-bold hidden md:block"> {name} </span>
-        <a
+        <!-- <a
           href={$url(`./edit?cid=${station.cid}`)}
           class="text-xs font-bold px-4 text-gray-300"
         >
           Edit
-        </a>
+        </a> -->
       </div>
       <p class="text-sm text-zinc-300 line-clamp-4">{description}</p>
       <div class="flex sm:flex-row flex-col sm:items-center sm:gap-10 gap-1">
