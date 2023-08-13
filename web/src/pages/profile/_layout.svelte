@@ -5,7 +5,7 @@
   import { accountStore } from '@/stores';
 
   $: {
-    if (!$accountStore.wallet) {
+    if (!$accountStore.isLoggedIn) {
       $goto('/login');
     }
   }

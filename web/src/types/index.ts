@@ -8,6 +8,7 @@ export type Station = {
   cover?: string;
   cid?: string;
   isStreamPrivate: boolean;
+  streamCid?: string;
 };
 
 export type StationMetadata = {

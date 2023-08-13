@@ -6,6 +6,7 @@
   import type { NFTStorageStatus, Station, StationMetadata } from '@/types';
   import ImgUpload from './ImgUpload.svelte';
   import { accountStore } from '@/stores';
+  import { registry } from '@/constants';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
@@ -44,15 +45,10 @@
 
     isProcessing = true;
     const metadata = await client.store(stationMetadata);
-    console.log(metadata);
-    const status = await getStatus(metadata.ipnft);
-    console.log(status);
-    console.log('waiting');
-    setTimeout(async () => {
-      console.log('create station');
-      await createStation(metadata.ipnft, monthlyFee, $accountStore.wallet);
-      isProcessing = false;
-    }, 60000);
+
+    await getStatus(metadata.ipnft);
+    await createStation(metadata.ipnft, monthlyFee, $accountStore.wallet);
+    isProcessing = false;
   };
 
   const getImgBlob = async (img: string): Promise<Blob> => {
@@ -67,14 +63,6 @@
     monthlyFee: ethers.BigNumberish,
     owner: string,
   ) => {
-    const registry = {
-      goerli: {
-        stations: '0xCdad2aEBeC7CED98781aCB8Bf787E182D1C6ad0d',
-        subscriptions: '0xdAe58536c54964F29300DE6C7F573D500a28AF94',
-        url: '',
-      },
-    };
-
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const station: StationsTypes.Stations = new Contract(

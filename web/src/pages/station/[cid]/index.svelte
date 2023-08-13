@@ -3,8 +3,8 @@
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import type { Station } from '@/types';
-  import Player from '../_components/Player.svelte';
-  import LoadingSpinner from '../_components/LoadingSpinner.svelte';
+  import Player from '../../_components/Player.svelte';
+  import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
   import { createStationsStore } from '@/stores';
   import type { Readable } from 'svelte/store';
   import { fetchStationNFT } from '@/utils';
@@ -29,6 +29,16 @@
     }) as unknown as StatinStoreType;
   };
 
+  const checkStationData = ($tmp: any) => {
+    if ($station.fetching || $station.error || !$station.data.stations.length)
+      return;
+
+    const s = $station.data.stations[0];
+    if (!s.streamCid) return;
+
+    uri = `https://gettv-srs.testing.gettv.ainur.dev/files/live/${s.streamCid}.mpd`;
+  };
+
   const loadStationNFT = async (cid: string) => {
     const data = await fetchStationNFT(cid);
     image = data.image;
@@ -39,6 +49,7 @@
 
   $: loadStationNFT($params.cid);
   $: fetchStationGraph($params.cid);
+  $: checkStationData($station.data);
 </script>
 
 {#if $station.fetching}

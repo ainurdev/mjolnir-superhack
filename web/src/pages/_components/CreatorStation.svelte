@@ -32,7 +32,15 @@
       alt="station cover"
     />
     <div class="flex flex-col gap-1 mt-4 md:mt-0">
-      <span class="text-sm font-bold hidden md:block"> {name} </span>
+      <div class="flex gap-4 items-center">
+        <span class="text-sm font-bold hidden md:block"> {name} </span>
+        <a
+          href={$url(`./edit?cid=${station.cid}`)}
+          class="text-xs font-bold px-4 text-gray-300"
+        >
+          Edit
+        </a>
+      </div>
       <p class="text-sm text-zinc-300 line-clamp-4">{description}</p>
       <div class="flex sm:flex-row flex-col sm:items-center sm:gap-10 gap-1">
         <div class="flex items-center gap-1 mt-2">
@@ -55,10 +63,10 @@
   >
     <img class="w-12 h-12 rounded-full" src={image} alt="station avatar" />
     <a
-      href={$url(`./edit?cid=${station.cid}`)}
-      class="border border-primary-400 text-xs font-bold px-4 py-2 rounded-3xl"
+      href={`/station/${station.cid}/stream`}
+      class="rounded-3xl border border-blue-500 hover:bg-blue-500 hover:text-gray-900 py-2 px-4 text-xs"
     >
-      Edit
+      Start Streaming
     </a>
   </div>
 </a>

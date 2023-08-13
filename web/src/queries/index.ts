@@ -8,6 +8,7 @@ export const getStations = gql`
       cid
       isStreamPrivate
       monthlyFee
+      streamCid
     }
   }
 `

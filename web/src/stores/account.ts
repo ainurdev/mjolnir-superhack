@@ -5,10 +5,12 @@ const KEY = LOCALSTORAGE_KEY + "mjolnir";
 
 type Data = {
   wallet: string;
+  isLoggedIn: boolean;
 }
 
 const initialData: Data = {
   wallet: null,
+  isLoggedIn: false,
 };
 
 const createStore = () => {
