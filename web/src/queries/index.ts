@@ -5,6 +5,9 @@ export const getStations = gql`
     stations(where: $where) {
       id
       owner
+      cid
+      isStreamPrivate
+      monthlyFee
     }
   }
 `

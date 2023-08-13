@@ -6,7 +6,7 @@ export type Station = {
   description?: string;
   image?: string;
   cover?: string;
-  streamCid?: string;
+  cid?: string;
   isStreamPrivate: boolean;
 };
 

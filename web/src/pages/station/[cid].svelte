@@ -2,84 +2,84 @@
   import { params } from '@roxi/routify';
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
-  import { onMount } from 'svelte';
-  import { request } from '@/utils';
   import type { Station } from '@/types';
   import Player from '../_components/Player.svelte';
   import LoadingSpinner from '../_components/LoadingSpinner.svelte';
+  import { createStationsStore } from '@/stores';
+  import type { Readable } from 'svelte/store';
+  import { fetchStationNFT } from '@/utils';
 
-  let station: Station,
-    stationCID: string,
-    uri: string,
-    loading = true;
+  type StatinStoreType = Readable<{
+    data: {
+      stations: Station[];
+    };
+    fetching: boolean;
+    error: string;
+  }>;
 
-  const getStation = async () => {
-    const response: any = await request(
-      `https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations?uid=${stationCID}`,
-      {
-        method: 'GET',
-        ignoreBaseUrl: true,
+  let station: StatinStoreType, uri: string;
+
+  let image: string, cover: string, name: string, description: string;
+
+  const fetchStationGraph = async (stationCid: string) => {
+    station = createStationsStore({
+      where: {
+        cid: stationCid,
       },
-    );
-
-    if (response && response.stations) {
-      station = response.stations[0];
-    }
+    }) as unknown as StatinStoreType;
   };
 
-  onMount(async () => {
-    await getStation();
-    loading = false;
-  });
+  const loadStationNFT = async (cid: string) => {
+    const data = await fetchStationNFT(cid);
+    image = data.image;
+    cover = data.cover;
+    name = data.name;
+    description = data.description;
+  };
 
-  $: stationCID = $params.cid;
+  $: loadStationNFT($params.cid);
+  $: fetchStationGraph($params.cid);
 </script>
 
-{#if loading}
+{#if $station.fetching}
   <LoadingSpinner />
+{:else if $station.error || !$station.data.stations.length}
+  <p>{$station.error}</p>
 {:else}
-  {#key station}
-    {#if station}
-      <div
-        in:fly={{
-          duration: 300,
-          y: -20,
-          opacity: 0.2,
-          easing: quintOut,
-        }}
-        class="flex flex-col items-center relative sm:px-20"
-      >
-        <img class="cover" src={station.cover} alt="cover" />
-        <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
-          <Player src={uri} />
-        </div>
-        <div
-          class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
-        >
-          <div class="flex gap-5 md:flex-row flex-col">
-            <img
-              class="rounded-full w-24 h-24"
-              src={station.image}
-              alt="avatar"
-            />
-            <div class="flex flex-col">
-              <h2 class="text-3xl font-black">
-                {station.name}
-              </h2>
-              <p class="text-lg text-zinc-200 mt-2">
-                {station.description}
-              </p>
-            </div>
-          </div>
-          <button
-            class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
-          >
-            Subscribe ${station.monthlyFee}
-          </button>
+  <div
+    in:fly={{
+      duration: 300,
+      y: -20,
+      opacity: 0.2,
+      easing: quintOut,
+    }}
+    class="flex flex-col items-center relative sm:px-20"
+  >
+    <img class="cover" src={cover} alt="cover" />
+    <div class="aspect-video rounded-3xl mt-10 sm:mt-24 w-[90%]">
+      <Player src={uri} />
+    </div>
+    <div
+      class="flex w-full items-start justify-between px-5 sm:px-20 mt-10 self-start"
+    >
+      <div class="flex gap-5 md:flex-row flex-col">
+        <img class="rounded-full w-24 h-24" src={image} alt="avatar" />
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-black">
+            {name}
+          </h2>
+          <p class="text-lg text-zinc-200 mt-2">
+            {description}
+          </p>
         </div>
       </div>
-    {/if}
-  {/key}
+      <button
+        class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+      >
+        Subscribe ${$station.data.stations[0].monthlyFee}
+      </button>
+    </div>
+  </div>
 {/if}
 
 <style>
