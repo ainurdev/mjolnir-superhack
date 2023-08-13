@@ -26,6 +26,7 @@
 
     if (wallets && wallets.length > 0 && chainId) {
       accountStore.setWallet(wallets[0]);
+      accountStore.setChainId(chainId);
       $goto('/home');
     } else {
       alert('Please connect your wallet to continue.');

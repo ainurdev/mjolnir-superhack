@@ -71,7 +71,7 @@
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const subscription: SubscriptionTypes.Subscriptions = new Contract(
-        registry.goerli.subscriptions,
+        registry[$accountStore.chainId].subscriptions,
         SubscriptionsABI.abi,
       ).connect(signer) as any;
       debugger;

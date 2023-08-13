@@ -81,7 +81,7 @@
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const stationContract: StationsTypes.Stations = new Contract(
-      registry.goerli.stations,
+      registry[$accountStore.chainId].stations,
       StationsABI.abi,
     ).connect(signer) as any;
 
@@ -102,7 +102,7 @@
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const stationContract: StationsTypes.Stations = new Contract(
-      registry.goerli.stations,
+      registry[$accountStore.chainId].stations,
       StationsABI.abi,
     ).connect(signer) as any;
 

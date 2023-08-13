@@ -6,15 +6,20 @@ const KEY = LOCALSTORAGE_KEY + "mjolnir";
 type Data = {
   wallet: string;
   isLoggedIn: boolean;
+  chainId: string;
 }
 
 const initialData: Data = {
   wallet: null,
   isLoggedIn: false,
+  chainId: null,
 };
 
 const createStore = () => {
   let initial = JSON.parse(localStorage.getItem(KEY) || "null") || initialData;
+  if (!initial.chainId) {
+    initial = { ...initial, chainId: null };
+  }
   const { subscribe, set, update } = writable<Data>(initial);
 
   subscribe((current) => {
@@ -27,6 +32,7 @@ const createStore = () => {
     update,
     setWallet: (wallet) => update((current) => ({ ...current, wallet })),
     removeWallet: () => update((current) => ({ ...current, wallet: null })),
+    setChainId: (chainId) => update((current) => ({ ...current, chainId })),
   };
 };
 

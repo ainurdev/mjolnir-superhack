@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Readable } from 'svelte/store';
   import { Contract, ethers } from 'ethers';
   import { fly } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
@@ -8,8 +7,8 @@
   import type * as StationsTypes from '@mjolnir/contracts/typechain-types/contracts/Stations';
 
   import { params } from '@roxi/routify';
-  import { createStationsStore } from '@/stores';
-  import type { Station, StationStoreType } from '@/types';
+  import { accountStore, createStationsStore } from '@/stores';
+  import type { StationStoreType } from '@/types';
   import { fetchStationNFT } from '@/utils';
   import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
   import { registry } from '@/constants';
@@ -54,7 +53,7 @@
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const station: StationsTypes.Stations = new Contract(
-      registry.goerli.stations,
+      registry[$accountStore.chainId].stations,
       StationsABI.abi,
     ).connect(signer) as any;
 
