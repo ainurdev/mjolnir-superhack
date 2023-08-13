@@ -113,7 +113,7 @@
       />
       <div class="flex flex-col gap-2 mt-5">
         <span class="text-sm">
-          Monthly fee for subscribers (Skip this step if you want free
+          Monthly fee for subscribers (Set to 0 (zero) if you want free
           subscription for your audience)
         </span>
         <input

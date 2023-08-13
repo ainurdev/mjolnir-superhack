@@ -1,12 +1,12 @@
 <script lang="ts">
   import { params } from '@roxi/routify';
+  import type { Readable } from 'svelte/store';
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import type { Station } from '@/types';
   import Player from '../../_components/Player.svelte';
   import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
-  import { createStationsStore } from '@/stores';
-  import type { Readable } from 'svelte/store';
+  import { accountStore, createStationsStore } from '@/stores';
   import { fetchStationNFT } from '@/utils';
 
   type StatinStoreType = Readable<{
@@ -17,9 +17,13 @@
     error: string;
   }>;
 
-  let station: StatinStoreType, uri: string;
-
-  let image: string, cover: string, name: string, description: string;
+  let station: StatinStoreType,
+    uri: string,
+    image: string,
+    cover: string,
+    name: string,
+    description: string,
+    isOwner: boolean;
 
   const fetchStationGraph = async (stationCid: string) => {
     station = createStationsStore({
@@ -34,8 +38,9 @@
       return;
 
     const s = $station.data.stations[0];
-    if (!s.streamCid) return;
+    isOwner = s.owner === $accountStore.wallet;
 
+    if (!s.streamCid) return;
     uri = `https://gettv-srs.testing.gettv.ainur.dev/files/live/${s.streamCid}.mpd`;
   };
 
@@ -84,11 +89,19 @@
           </p>
         </div>
       </div>
-      <button
-        class="bg-primary-500 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
-      >
-        Subscribe ${$station.data.stations[0].monthlyFee}
-      </button>
+      {#if isOwner}
+        <span
+          class="bg-primary-200 text-primary-800 shrink-0 text-sm rounded-2xl px-5 py-3 font-bold"
+        >
+          Subscribed
+        </span>
+      {:else}
+        <button
+          class="bg-primary-500 hover:bg-primary-700 shrink-0 text-sm rounded-3xl px-5 py-3 font-bold"
+        >
+          {`Subscribe ${$station.data.stations[0].monthlyFee / 10 ** 18}`}
+        </button>
+      {/if}
     </div>
   </div>
 {/if}
