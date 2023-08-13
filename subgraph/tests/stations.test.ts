@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, Result } from '@graphprotocol/graph-ts';
 import {
   afterEach,
   assert,
@@ -62,30 +62,7 @@ describe('Station', function () {
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'name',
-      'random station 1 name',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      'random station 1 description',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'image',
-      'ipfs://randomimage1',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'cover',
-      'ipfs://randomcover1',
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'cid', cid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
     assert.fieldEquals(
       'Station',
@@ -114,15 +91,7 @@ describe('Station', function () {
       'monthlyFee',
       newMonthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      result.description,
-    );
-    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
-    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'cid', result.cid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
     assert.fieldEquals(
       'Station',
@@ -151,30 +120,7 @@ describe('Station', function () {
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'name',
-      'random station 2 name',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      'random station 2 description',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'image',
-      'ipfs://randomimage2',
-    );
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'cover',
-      'ipfs://randomcover2',
-    );
+    assert.fieldEquals('Station', stationId.toString(), 'cid', newCid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
     assert.fieldEquals(
       'Station',
@@ -203,15 +149,7 @@ describe('Station', function () {
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      result.description,
-    );
-    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
-    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'cid', result.cid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', streamCid);
     assert.fieldEquals(
       'Station',
@@ -240,15 +178,7 @@ describe('Station', function () {
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      result.description,
-    );
-    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
-    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'cid', result.cid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', streamCid);
     assert.fieldEquals(
       'Station',
@@ -279,15 +209,7 @@ describe('Station', function () {
       'monthlyFee',
       monthlyFee.toString(),
     );
-    assert.fieldEquals('Station', stationId.toString(), 'name', result.name);
-    assert.fieldEquals(
-      'Station',
-      stationId.toString(),
-      'description',
-      result.description,
-    );
-    assert.fieldEquals('Station', stationId.toString(), 'image', result.image);
-    assert.fieldEquals('Station', stationId.toString(), 'cover', result.cover);
+    assert.fieldEquals('Station', stationId.toString(), 'cid', result.cid);
     assert.fieldEquals('Station', stationId.toString(), 'streamCid', 'null');
     assert.fieldEquals(
       'Station',

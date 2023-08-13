@@ -2,10 +2,7 @@ type Station @entity {
   id: String!
   owner: String!
   monthlyFee: BigInt!
-  name: String
-  description: String
-  image: String
-  cover: String
+  cid: String!
   streamCid: String
   isStreamPrivate: Boolean!
 }

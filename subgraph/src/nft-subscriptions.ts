@@ -1,5 +1,3 @@
-import { Address } from '@graphprotocol/graph-ts';
-
 import {
   SubscriptionCreated as SubscriptionCreatedEvent,
   Transfer as TransferEvent,
