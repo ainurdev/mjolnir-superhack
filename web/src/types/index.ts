@@ -1,4 +1,5 @@
 export type Station = {
+  cid?: string;
   id?: string;
   owner: string;
   monthlyFee: number;
@@ -118,10 +119,10 @@ export type StationQueryWhere = {
   monthlyFee_lte: number;
   monthlyFee_in: number[];
   monthlyFee_not_in: number[];
-}
+};
 
 export type NFTStorageStatus = {
   cid: string;
   created: Date;
   size: number;
-}
+};

@@ -9,7 +9,7 @@ export const getStations = gql`
   }
 `;
 
-export const getStationMEtadata = async cid => {
+export const getStationMetadata = async cid => {
   const response = await fetch(`https://ipfs.io/ipfs/${cid}/metadata.json`);
   const data = await response.json();
   return data;

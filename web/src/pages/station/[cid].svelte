@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { params } from '@roxi/routify';
+  import { meta, params } from '@roxi/routify';
   import { quintOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import { onMount } from 'svelte';
   import { request } from '@/utils';
   import type { Station } from '@/types';
   import Player from '../_components/Player.svelte';
+  import { getStationMetadata, getImage } from '@/queries';
 
   let station: Station, stationCID: string;
   let uri: string;
 
-  const getStation = async () => {
+  const getStationDetails = async stationCID => {
     const response: any = await request(
       `https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations?uid=${stationCID}`,
       {
@@ -20,12 +21,29 @@
     );
 
     if (response && response.stations) {
-      station = response.stations[0];
+      return response.stations[0];
     }
   };
 
+  const handleStation = async (cid): Promise<Station> => {
+    const station = await getStationDetails(cid);
+    // const metadata = await getStationMetadata(station.cid);
+    // const cover = await getImage(metadata.cover);
+    // const image = await getImage(metadata.image);
+
+    // return {
+    //   ...station,
+    //   ...metadata,
+    //   cover,
+    //   image,
+    // };
+    return {
+      ...station,
+    };
+  };
+
   onMount(async () => {
-    await getStation();
+    await handleStation(stationCID);
   });
 
   $: stationCID = $params.cid;

@@ -22,7 +22,7 @@
       "@/stores": ["src/stores/index"],
       "@/types": ["src/types/index"],
       "@/types/*": ["src/types/*"],
-      "@/queries/*": ["src/queries/*"],
+      "@/queries": ["src/queries/index"],
       "@/utils": ["src/utils/index"]
     }
   },
