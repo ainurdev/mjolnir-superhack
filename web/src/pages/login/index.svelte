@@ -6,6 +6,7 @@
   import { accountStore } from '@/stores';
 
   import Logo from '../_components/Logo.svelte';
+  import { registry } from '@/constants';
 
   let etherumInstalled: boolean = false,
     shouldConnectWallet: boolean = false;
@@ -23,6 +24,12 @@
     }
 
     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    if (!registry[chainId]) {
+      alert(
+        'Please switch to the correct network to continue. Either "Optimism Goerli" or "Goerli".',
+      );
+      return;
+    }
 
     if (wallets && wallets.length > 0 && chainId) {
       accountStore.setWallet(wallets[0]);
