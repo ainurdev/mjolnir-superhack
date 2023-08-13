@@ -7,19 +7,21 @@
   import { request } from '@/utils';
   import type { Station } from '@/types';
 
-
   let stations: Station[] = [];
 
   const getStations = async () => {
-    const response: any = await request('https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations', {
-      method: 'GET',
-      ignoreBaseUrl: true,
-    });
+    const response: any = await request(
+      'https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-f5594546-71c3-4ce7-846b-9101362b017d/mjolnir/stations',
+      {
+        method: 'GET',
+        ignoreBaseUrl: true,
+      },
+    );
 
     if (response && response.stations) {
       stations = response.stations;
     }
-  }
+  };
 
   onMount(async () => {
     await getStations();
@@ -33,11 +35,10 @@
     opacity: 0.2,
     easing: quintOut,
   }}
-  class="flex flex-col items-center"
+  style="grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));"
+  class="grid max-w-[1950px] grid-flow-row place-items-start items-start justify-start gap-5 p-5"
 >
-  <div class="flex flex-wrap justify-center gap-5 mb-5">
-    {#each stations as station}
-      <StationCard station={station} />
-    {/each}
-  </div>
+  {#each [...stations, ...stations] as station}
+    <StationCard {station} />
+  {/each}
 </div>
