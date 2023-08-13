@@ -10,6 +10,8 @@ Viewers can buy the **Subscription NFT** of the station they want to watch direc
 
 Vision for Mjolnir is to create a DAO that empowers creators and viewers alike, offering a secure and transparent way for creators to monetize their content and have a real value for their brand and name and also for viewers to support their favorite creators while being able to always have a fair price for watching the content.
 
+![vision](https://github.com/ainurdev/mjolnir-superhack/assets/7544732/0497532e-7ff2-49eb-afdd-906670bdd840)
+
 ### Milestones
 
 - Support more chains!
