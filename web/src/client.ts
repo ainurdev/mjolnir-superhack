@@ -2,7 +2,7 @@ import { cacheExchange, createClient, fetchExchange, setContextClient } from '@u
 
 const initGraphql = () => {
   const client = createClient({
-    url: 'https://graph.ainur.dev/subgraphs/name/mjolnir-ethereum-goerli-test',
+    url: 'https://graphnode.ainur.dev/subgraphs/name/mjolnir-ethereum-goerli',
     exchanges: [cacheExchange, fetchExchange],
   });
 

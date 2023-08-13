@@ -44,9 +44,15 @@
 
     isProcessing = true;
     const metadata = await client.store(stationMetadata);
+    console.log(metadata);
     const status = await getStatus(metadata.ipnft);
-    await createStation(status.cid, monthlyFee, $accountStore.wallet);
-    isProcessing = false;
+    console.log(status);
+    console.log('waiting');
+    setTimeout(async () => {
+      console.log('create station');
+      await createStation(metadata.ipnft, monthlyFee, $accountStore.wallet);
+      isProcessing = false;
+    }, 60000);
   };
 
   const getImgBlob = async (img: string): Promise<Blob> => {
@@ -63,8 +69,8 @@
   ) => {
     const registry = {
       goerli: {
-        stations: '0xA78Ad8Ec725C50D6FFF8c9B43Ded2CD93C5f9e75',
-        subscriptions: '0x9BC147caE0f2255c9cb86977b1A985f5Bac3f98a',
+        stations: '0xCdad2aEBeC7CED98781aCB8Bf787E182D1C6ad0d',
+        subscriptions: '0xdAe58536c54964F29300DE6C7F573D500a28AF94',
         url: '',
       },
     };
