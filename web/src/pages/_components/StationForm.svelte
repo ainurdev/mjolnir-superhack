@@ -8,6 +8,9 @@
   import ImgUpload from './ImgUpload.svelte';
   import { accountStore } from '@/stores';
   import { registry } from '@/constants';
+  import { onMount } from 'svelte';
+  import { fetchStationNFT } from '@/utils';
+  import { goto, params } from '@roxi/routify';
 
   export let state: 'create' | 'edit' = 'create';
   export let station: Station = {
@@ -74,12 +77,12 @@
   ) => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
-    const station: StationsTypes.Stations = new Contract(
+    const stationContract: StationsTypes.Stations = new Contract(
       registry.goerli.stations,
       StationsABI.abi,
     ).connect(signer) as any;
 
-    const tx = await station.createStation(
+    const tx = await stationContract.createStation(
       monthlyFee,
       cid,
       owner,
@@ -91,6 +94,25 @@
       throw new Error('failed');
     }
   };
+
+  const loadStationNFT = async (cid: string) => {
+    const data = await fetchStationNFT(cid);
+    station.name = data.name;
+    station.cover = data.cover;
+    station.image = data.image;
+    station.description = data.description;
+  };
+
+  onMount(() => {
+    if (state === 'edit') {
+      if (!$params.cid) {
+        $goto('/profile');
+        return;
+      }
+
+      loadStationNFT($params.cid);
+    }
+  });
 </script>
 
 <form

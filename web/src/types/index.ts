@@ -1,3 +1,5 @@
+import type { Readable } from "svelte/store";
+
 export type Station = {
   id?: string;
   owner: string;
@@ -126,3 +128,11 @@ export type NFTStorageStatus = {
   created: Date;
   size: number;
 }
+
+export type StationStoreType = Readable<{
+  data: {
+    stations: Station[];
+  };
+  fetching: boolean;
+  error: string;
+}>;

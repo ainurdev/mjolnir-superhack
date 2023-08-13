@@ -3,7 +3,6 @@
   import type { Station } from '@/types';
 
   import UserIcon from '@/icons/User.svelte';
-  import ClockIcon from '@/icons/Clock.svelte';
   import { fetchStationNFT } from '@/utils';
 
   export let station: Station;
@@ -34,21 +33,15 @@
     <div class="flex flex-col gap-1 mt-4 md:mt-0">
       <div class="flex gap-4 items-center">
         <span class="text-sm font-bold hidden md:block"> {name} </span>
-        <!-- <a
+        <a
           href={$url(`./edit?cid=${station.cid}`)}
           class="text-xs font-bold px-4 text-gray-300"
         >
           Edit
-        </a> -->
+        </a>
       </div>
       <p class="text-sm text-zinc-300 line-clamp-4">{description}</p>
       <div class="flex sm:flex-row flex-col sm:items-center sm:gap-10 gap-1">
-        <div class="flex items-center gap-1 mt-2">
-          <ClockIcon class="w-4 h-4 fill-zinc-300" />
-          <span class="text-xs text-zinc-400">
-            Last stream {'never'}
-          </span>
-        </div>
         <div class="flex items-center gap-1 mt-1">
           <UserIcon class="w-4 h-4 fill-zinc-300" />
           <span class="text-xs text-zinc-400">

@@ -7,22 +7,14 @@
   import { formatUnits } from 'ethers/utils';
   import SubscriptionsABI from '@mjolnir/contracts/artifacts/contracts/Subscriptions.sol/Subscriptions.json';
   import type * as SubscriptionTypes from '@mjolnir/contracts/typechain-types/contracts/Subscriptions';
-  import type { Station } from '@/types';
+  import type { Station, StationStoreType } from '@/types';
   import Player from '../../_components/Player.svelte';
   import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
   import { accountStore, createStationsStore } from '@/stores';
   import { fetchStationNFT } from '@/utils';
   import { registry } from '@/constants';
 
-  type StatinStoreType = Readable<{
-    data: {
-      stations: Station[];
-    };
-    fetching: boolean;
-    error: string;
-  }>;
-
-  let station: StatinStoreType,
+  let station: StationStoreType,
     uri: string,
     image: string,
     cover: string,
@@ -37,7 +29,7 @@
       where: {
         cid: stationCid,
       },
-    }) as unknown as StatinStoreType;
+    }) as unknown as StationStoreType;
   };
 
   const checkStationData = ($tmp: any) => {

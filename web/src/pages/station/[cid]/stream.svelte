@@ -9,18 +9,10 @@
 
   import { params } from '@roxi/routify';
   import { createStationsStore } from '@/stores';
-  import type { Station } from '@/types';
+  import type { Station, StationStoreType } from '@/types';
   import { fetchStationNFT } from '@/utils';
   import LoadingSpinner from '../../_components/LoadingSpinner.svelte';
   import { registry } from '@/constants';
-
-  type StationStoreType = Readable<{
-    data: {
-      stations: Station[];
-    };
-    fetching: boolean;
-    error: string;
-  }>;
 
   let station: StationStoreType, streamCid: string;
 

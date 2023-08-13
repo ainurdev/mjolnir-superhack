@@ -2,7 +2,6 @@
   import { url } from '@roxi/routify';
   import type { Station } from '@/types';
   import UserIcon from '@/icons/User.svelte';
-  import ClockIcon from '@/icons/Clock.svelte';
   import { fetchStationNFT } from '@/utils';
 
   export let station: Station;
@@ -36,12 +35,6 @@
     <p class="line-clamp-2">
       {description}
     </p>
-    <div class="flex items-center gap-1 mt-2">
-      <ClockIcon class="w-4 h-4 fill-zinc-300" />
-      <span class="text-xs text-zinc-400">
-        Last stream {'never'}
-      </span>
-    </div>
     <div class="flex items-center gap-1 mt-1">
       <UserIcon class="w-4 h-4 fill-zinc-300" />
       <span class="text-xs text-zinc-400">
